@@ -1,6 +1,8 @@
 
 #include "stratum.h"
 
+void coind_getauxblock(YAAMP_COIND *coind);
+
 bool coind_submitwork(YAAMP_COIND *coind, const char *block)
 {
 	int paramlen = strlen(block);

@@ -17,8 +17,6 @@ RUN apt-get update \
         curl \
         default-mysql-client \
         dumb-init \
-        g++-9 \
-        gcc-9 \
         git \
         jq \
         less \
@@ -52,6 +50,7 @@ RUN apt-get update \
         php-memcache \
         php-mysql \
         php-opcache \
+        php-pear \
         php-shmop \
         php-soap \
         php-sysvmsg \
@@ -74,9 +73,7 @@ RUN apt-get update \
 RUN a2enmod remoteip rewrite \
     && printf '\n' | pecl install mcrypt \
     && echo "extension=mcrypt.so" >> /etc/php/8.1/apache2/php.ini \
-    && echo "extension=mcrypt.so" >> /etc/php/8.1/cli/php.ini \
-    && ln -sf /usr/bin/gcc-9 /usr/bin/gcc \
-    && ln -sf /usr/bin/g++-9 /usr/bin/g++
+    && echo "extension=mcrypt.so" >> /etc/php/8.1/cli/php.ini
 
 RUN git clone --depth 1 --branch dev "${YIIMP_REPO}" /src/yiimp \
     && git -C /src/yiimp fetch --depth 1 origin "${YIIMP_REF}" \

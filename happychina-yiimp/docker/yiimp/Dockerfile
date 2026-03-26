@@ -2,7 +2,7 @@ FROM ubuntu:22.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV YIIMP_REPO=https://github.com/Kudaraidee/yiimp.git
-ENV YIIMP_REF=867dc32
+ENV YIIMP_REF=867dc325c9ba9892316599c8535137052f230650
 
 RUN apt-get update \
     && apt-get dist-upgrade -y \
@@ -75,8 +75,7 @@ RUN a2enmod remoteip rewrite \
     && echo "extension=mcrypt.so" >> /etc/php/8.1/apache2/php.ini \
     && echo "extension=mcrypt.so" >> /etc/php/8.1/cli/php.ini
 
-RUN git clone --depth 1 --branch dev "${YIIMP_REPO}" /src/yiimp \
-    && git -C /src/yiimp fetch --depth 1 origin "${YIIMP_REF}" \
+RUN git clone --branch dev "${YIIMP_REPO}" /src/yiimp \
     && git -C /src/yiimp checkout "${YIIMP_REF}"
 
 COPY docker/yiimp/patches/coinbase.cpp /src/yiimp/stratum/coinbase.cpp

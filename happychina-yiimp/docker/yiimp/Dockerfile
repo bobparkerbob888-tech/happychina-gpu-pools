@@ -8,6 +8,7 @@ RUN apt-get update \
     && apt-get dist-upgrade -y \
     && apt-get install -y --no-install-recommends \
         apache2 \
+        autoconf \
         automake \
         autotools-dev \
         build-essential \
@@ -25,6 +26,7 @@ RUN apt-get update \
         libgd-dev \
         libgmp-dev \
         libicu-dev \
+        libmariadb-dev \
         libmariadb-dev-compat \
         libmcrypt-dev \
         libmemcached-dev \

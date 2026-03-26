@@ -46,7 +46,7 @@ It does not install:
 1. Open Umbrel.
 2. Add this community app store:
 
-   `https://github.com/bobparkerbob888-tech/happychina-gpu-pools`
+   `https://github.com/bobparkerbob888-tech/happychina-umbrel-apps`
 
 3. Install the `YIIMP` app.
 4. Open the app.

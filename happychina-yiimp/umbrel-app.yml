@@ -1,5 +1,5 @@
 manifestVersion: 1.1
-id: happychina-gpu-pools-yiimp
+id: happychina-yiimp
 category: bitcoin
 name: YIIMP
 icon: https://getumbrel.github.io/umbrel-apps-gallery/public-pool/icon.svg
@@ -10,10 +10,10 @@ description: >-
   admin sweep tools, and corrected port guide on top of an existing host YIIMP
   install, then exposes it as an Umbrel app.
 developer: HappyChina
-website: https://github.com/bobparkerbob888-tech/happychina-gpu-pools
+website: https://github.com/bobparkerbob888-tech/happychina-umbrel-apps
 dependencies: []
-repo: https://github.com/bobparkerbob888-tech/happychina-gpu-pools
-support: https://github.com/bobparkerbob888-tech/happychina-gpu-pools/issues
+repo: https://github.com/bobparkerbob888-tech/happychina-umbrel-apps
+support: https://github.com/bobparkerbob888-tech/happychina-umbrel-apps/issues
 port: 24180
 gallery: []
 path: ""

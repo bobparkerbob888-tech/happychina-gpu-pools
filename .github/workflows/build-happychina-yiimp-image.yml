@@ -1,4 +1,4 @@
-name: Build YIIMP Umbrel Image
+name: Build HappyChina YIIMP Image
 
 on:
   workflow_dispatch:
@@ -6,8 +6,8 @@ on:
     branches:
       - main
     paths:
-      - ".github/workflows/build-yiimp-image.yml"
-      - "happychina-gpu-pools-yiimp/**"
+      - ".github/workflows/build-happychina-yiimp-image.yml"
+      - "happychina-yiimp/**"
 
 env:
   REGISTRY: ghcr.io
@@ -31,13 +31,13 @@ jobs:
       - uses: docker/metadata-action@v5
         id: meta
         with:
-          images: ${{ env.REGISTRY }}/${{ github.repository_owner }}/happychina-gpu-pools-yiimp-app
+          images: ${{ env.REGISTRY }}/${{ github.repository_owner }}/happychina-yiimp-app
           tags: |
             type=raw,value=latest
             type=raw,value=1.1.0
       - uses: docker/build-push-action@v5
         with:
-          context: ./happychina-gpu-pools-yiimp/docker/app
+          context: ./happychina-yiimp/docker/app
           push: true
           platforms: linux/amd64,linux/arm64
           tags: ${{ steps.meta.outputs.tags }}

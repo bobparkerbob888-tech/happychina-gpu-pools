@@ -1,4 +1,4 @@
-# HappyChina GPU Pools
+# HappyChina Umbrel Apps
 
 Umbrel community app store for HappyChina mining apps and overlays.
 
@@ -35,7 +35,7 @@ Important:
 
 Add this app store to your Umbrel:
 ```
-https://github.com/bobparkerbob888-tech/happychina-gpu-pools
+https://github.com/bobparkerbob888-tech/happychina-umbrel-apps
 ```
 
 Go to **Umbrel > App Store > Community App Stores** and add the URL above.
@@ -92,4 +92,4 @@ All images are hosted on GitHub Container Registry:
 - `ghcr.io/bobparkerbob888-tech/open-etc-pool:v1.0.0`
 - `ghcr.io/bobparkerbob888-tech/ethw-pool-frontend:v1.0.0`
 - `ghcr.io/bobparkerbob888-tech/etc-pool-frontend:v1.0.0`
-- `ghcr.io/bobparkerbob888-tech/happychina-gpu-pools-yiimp-app:1.1.0`
+- `ghcr.io/bobparkerbob888-tech/happychina-yiimp-app:1.1.0`

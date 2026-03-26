@@ -1,0 +1,2701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HappyChina Pool - Multi-Coin Scrypt Mining</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ===== CSS Reset & Variables ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg-body: #0a0b0f;
+  --bg-surface: #12141a;
+  --bg-card: #181a22;
+  --bg-card-hover: #1e2029;
+  --bg-input: #1a1c24;
+  --border: #2a2d3a;
+  --border-light: #3a3d4a;
+  --text-primary: #e8eaed;
+  --text-secondary: #9ca3af;
+  --text-muted: #6b7280;
+  --accent: #f59e0b;
+  --accent-dim: rgba(245, 158, 11, 0.15);
+  --accent-hover: #d97706;
+  --red: #ef4444;
+  --red-dim: rgba(239, 68, 68, 0.15);
+  --green: #22c55e;
+  --green-dim: rgba(34, 197, 94, 0.15);
+  --blue: #3b82f6;
+  --blue-dim: rgba(59, 130, 246, 0.15);
+  --purple: #a855f7;
+  --orange: #f97316;
+  --radius: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+  --transition: 0.2s ease;
+  --max-width: 1200px;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg-body);
+  color: var(--text-primary);
+  line-height: 1.6;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: inherit; text-decoration: none; }
+img { max-width: 100%; }
+
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.mono {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* ===== Navbar ===== */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(10, 11, 15, 0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+
+.navbar-inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 800;
+  font-size: 18px;
+}
+
+.brand-dragon {
+  font-size: 32px;
+  line-height: 1;
+}
+
+.brand-text {
+  background: linear-gradient(135deg, var(--accent), #ef4444);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.navbar-links {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.nav-link {
+  padding: 8px 16px;
+  border-radius: var(--radius);
+  color: var(--text-secondary);
+  font-weight: 500;
+  font-size: 14px;
+  transition: var(--transition);
+  cursor: pointer;
+}
+
+.nav-link:hover, .nav-link.active {
+  color: var(--text-primary);
+  background: var(--bg-card);
+}
+
+.nav-link.active {
+  color: var(--accent);
+}
+
+.mobile-toggle {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.mobile-toggle span {
+  width: 22px;
+  height: 2px;
+  background: var(--text-secondary);
+  border-radius: 2px;
+  transition: var(--transition);
+}
+
+/* ===== Page Sections (SPA routing) ===== */
+.page { display: none; }
+.page.active { display: block; }
+
+/* ===== Hero ===== */
+.hero {
+  text-align: center;
+  padding: 80px 0 60px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 800px;
+  height: 800px;
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.hero h1 {
+  font-size: 48px;
+  font-weight: 900;
+  margin-bottom: 16px;
+  line-height: 1.1;
+  position: relative;
+}
+
+.hero .accent-text {
+  background: linear-gradient(135deg, var(--accent), #ef4444);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-sub {
+  font-size: 18px;
+  color: var(--text-secondary);
+  max-width: 640px;
+  margin: 0 auto 40px;
+  line-height: 1.7;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 56px;
+}
+
+/* ===== Buttons ===== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: var(--radius);
+  font-weight: 600;
+  font-size: 14px;
+  border: none;
+  cursor: pointer;
+  transition: var(--transition);
+  font-family: inherit;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #000;
+}
+.btn-primary:hover { background: var(--accent-hover); }
+
+.btn-secondary {
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+}
+.btn-secondary:hover { border-color: var(--border-light); background: var(--bg-card-hover); }
+
+.btn-lg {
+  padding: 14px 32px;
+  font-size: 16px;
+  border-radius: 10px;
+}
+
+.btn-sm {
+  padding: 6px 14px;
+  font-size: 13px;
+}
+
+/* ===== Stats Row ===== */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 48px;
+}
+
+.stat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  text-align: center;
+  transition: var(--transition);
+}
+
+.stat-card:hover {
+  border-color: var(--border-light);
+}
+
+.stat-card .stat-value {
+  font-size: 32px;
+  font-weight: 800;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+
+.stat-card .stat-label {
+  font-size: 12px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+
+.stat-card .stat-sub {
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  min-height: 32px;
+}
+
+.stat-card.green .stat-value { color: var(--green); }
+.stat-card.blue .stat-value { color: var(--blue); }
+.stat-card.purple .stat-value { color: var(--purple); }
+
+/* ===== Section Headers ===== */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.section-header h2 {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.section-header .section-sub {
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+/* ===== Coin Grid ===== */
+.coin-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 16px;
+  margin-bottom: 56px;
+}
+
+.coin-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  transition: var(--transition);
+  cursor: default;
+}
+
+.coin-card:hover {
+  border-color: var(--border-light);
+  background: var(--bg-card-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+.coin-card-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.coin-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 16px;
+  font-family: 'JetBrains Mono', monospace;
+  flex-shrink: 0;
+}
+
+.coin-icon.ltc { background: linear-gradient(135deg, #345d9d, #4a7fd4); color: #fff; }
+.coin-icon.doge { background: linear-gradient(135deg, #c2a633, #dbc556); color: #fff; }
+.coin-icon.bells { background: linear-gradient(135deg, #d4a017, #e8b824); color: #fff; }
+.coin-icon.pepe { background: linear-gradient(135deg, #3ea843, #52c957); color: #fff; }
+.coin-icon.lky { background: linear-gradient(135deg, #2d8a4e, #3fa862); color: #fff; }
+.coin-icon.jkc { background: linear-gradient(135deg, #7c3aed, #9461f5); color: #fff; }
+.coin-icon.dingo { background: linear-gradient(135deg, #d97706, #f59e0b); color: #fff; }
+.coin-icon.trmp { background: linear-gradient(135deg, #dc2626, #ef4444); color: #fff; }
+.coin-icon.flop { background: linear-gradient(135deg, #0f766e, #14b8a6); color: #fff; }
+.coin-icon.crc { background: linear-gradient(135deg, #1d4ed8, #60a5fa); color: #fff; }
+.coin-icon.default { background: linear-gradient(135deg, #6b7280, #9ca3af); color: #fff; }
+
+.coin-name {
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.coin-symbol {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.coin-algo-badge {
+  margin-left: auto;
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  background: var(--accent-dim);
+  color: var(--accent);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.coin-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.coin-stat {
+  padding: 10px 12px;
+  background: var(--bg-surface);
+  border-radius: var(--radius);
+}
+
+.coin-stat-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  margin-bottom: 4px;
+}
+
+.coin-stat-value {
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--text-primary);
+}
+
+/* ===== Features Grid ===== */
+.features-section {
+  padding: 48px 0;
+  margin-bottom: 16px;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.feature-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  transition: var(--transition);
+}
+
+.feature-card:hover {
+  border-color: var(--border-light);
+}
+
+.feature-icon {
+  font-size: 28px;
+  margin-bottom: 14px;
+}
+
+.feature-card h3 {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.feature-card p {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+/* ===== Merge Mining Info ===== */
+.merge-mining-banner {
+  background: linear-gradient(135deg, var(--bg-card), rgba(245, 158, 11, 0.05));
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: 40px;
+  margin-bottom: 56px;
+  display: flex;
+  gap: 32px;
+  align-items: center;
+}
+
+.merge-mining-icon {
+  font-size: 64px;
+  flex-shrink: 0;
+}
+
+.merge-mining-content h3 {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.merge-mining-content p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin-bottom: 12px;
+}
+
+.merge-coin-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.merge-coin-tag {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: 'JetBrains Mono', monospace;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+}
+
+.merge-coin-tag.parent {
+  background: var(--accent-dim);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ===== How To Mine / Steps ===== */
+.steps-section {
+  padding: 48px 0;
+}
+
+.steps-grid {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.step-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 32px 24px;
+  flex: 1;
+  text-align: center;
+}
+
+.step-num {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #000;
+  font-weight: 800;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+}
+
+.step-card h3 {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.step-card p {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.step-arrow {
+  font-size: 24px;
+  color: var(--text-muted);
+  margin-top: 48px;
+}
+
+/* ===== Cards ===== */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  margin-bottom: 24px;
+  overflow: hidden;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.card-header h2 {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.card-body {
+  padding: 24px;
+}
+
+/* ===== Tables ===== */
+.table-container {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead th {
+  text-align: left;
+  padding: 12px 16px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+tbody td {
+  padding: 12px 16px;
+  font-size: 14px;
+  border-bottom: 1px solid rgba(42, 45, 58, 0.5);
+  color: var(--text-secondary);
+}
+
+tbody tr:hover {
+  background: var(--bg-card-hover);
+}
+
+tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* ===== Status Badges ===== */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.badge-confirmed, .badge-online, .badge-new {
+  background: var(--green-dim);
+  color: var(--green);
+}
+
+.badge-pending, .badge-immature {
+  background: var(--accent-dim);
+  color: var(--accent);
+}
+
+.badge-orphaned, .badge-offline {
+  background: var(--red-dim);
+  color: var(--red);
+}
+
+/* ===== Dashboard ===== */
+.wallet-input-section {
+  text-align: center;
+  padding: 48px 0;
+}
+
+.wallet-input-section h2 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.wallet-input-section p {
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+}
+
+.wallet-form {
+  display: flex;
+  gap: 12px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.wallet-form input {
+  flex: 1;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 18px;
+  color: var(--text-primary);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  outline: none;
+  transition: var(--transition);
+}
+
+.wallet-form input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-dim);
+}
+
+.wallet-form input::placeholder {
+  color: var(--text-muted);
+}
+
+.dashboard-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.dash-stat {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+}
+
+.dash-stat .label {
+  font-size: 12px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+
+.dash-stat .value {
+  font-size: 22px;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--accent);
+}
+
+.dash-stat .value.green { color: var(--green); }
+.dash-stat .value.blue { color: var(--blue); }
+
+/* ===== Getting Started ===== */
+.getting-started-content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.setup-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  margin-bottom: 24px;
+}
+
+.setup-card h3 {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.setup-card p {
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 1.7;
+  margin-bottom: 12px;
+}
+
+.code-block {
+  background: var(--bg-body);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  color: var(--accent);
+  overflow-x: auto;
+  margin: 12px 0;
+  position: relative;
+}
+
+.code-block .copy-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 4px 10px;
+  font-size: 11px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.code-block .copy-btn:hover {
+  color: var(--text-primary);
+  border-color: var(--border-light);
+}
+
+.port-table {
+  width: 100%;
+  margin: 12px 0;
+}
+
+.port-table td, .port-table th {
+  padding: 10px 16px;
+}
+
+/* ===== Tab Bar ===== */
+.tab-bar {
+  display: flex;
+  gap: 4px;
+}
+
+.tab-btn {
+  padding: 6px 14px;
+  border-radius: var(--radius);
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: inherit;
+  transition: var(--transition);
+}
+
+.tab-btn:hover { color: var(--text-secondary); }
+.tab-btn.active { color: var(--accent); background: var(--accent-dim); }
+
+/* ===== Pagination ===== */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.pagination button {
+  padding: 8px 16px;
+  border-radius: var(--radius);
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13px;
+  transition: var(--transition);
+}
+
+.pagination button:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.pagination button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.pagination span {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* ===== Loading & Empty ===== */
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 0;
+}
+
+.spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.empty-state {
+  text-align: center;
+  padding: 48px;
+  color: var(--text-muted);
+}
+
+.empty-state h3 {
+  font-size: 16px;
+  margin-bottom: 8px;
+  color: var(--text-secondary);
+}
+
+/* ===== Payout Addresses ===== */
+.payout-page {
+  padding-top: 32px;
+  padding-bottom: 48px;
+}
+
+.payout-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.payout-header h2 {
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.payout-header p {
+  color: var(--text-secondary);
+  font-size: 15px;
+  max-width: 560px;
+  margin: 0 auto;
+}
+
+.payout-lookup {
+  display: flex;
+  gap: 12px;
+  max-width: 640px;
+  margin: 24px auto 0;
+}
+
+.payout-lookup input {
+  flex: 1;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 18px;
+  color: var(--text-primary);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  outline: none;
+  transition: var(--transition);
+}
+
+.payout-lookup input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-dim);
+}
+
+.payout-lookup input::placeholder {
+  color: var(--text-muted);
+}
+
+.payout-content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.earnings-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  margin-bottom: 24px;
+  overflow: hidden;
+}
+
+.earnings-card .card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.earnings-card .card-header h3 {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.earnings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1px;
+  background: var(--border);
+}
+
+.earnings-item {
+  background: var(--bg-card);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.earnings-item .coin-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 11px;
+  flex-shrink: 0;
+}
+
+.earnings-item .coin-icon.ltc { background: var(--blue-dim); color: var(--blue); }
+.earnings-item .coin-icon.doge { background: var(--accent-dim); color: var(--accent); }
+.earnings-item .coin-icon.bells { background: var(--green-dim); color: var(--green); }
+.earnings-item .coin-icon.pepe { background: var(--green-dim); color: var(--green); }
+.earnings-item .coin-icon.dingo { background: rgba(249, 115, 22, 0.15); color: var(--orange); }
+.earnings-item .coin-icon.lky { background: rgba(168, 85, 247, 0.15); color: var(--purple); }
+.earnings-item .coin-icon.jkc { background: var(--red-dim); color: var(--red); }
+.earnings-item .coin-icon.trmp { background: var(--red-dim); color: var(--red); }
+.earnings-item .coin-icon.flop { background: rgba(20, 184, 166, 0.15); color: #14b8a6; }
+.earnings-item .coin-icon.crc { background: rgba(59, 130, 246, 0.15); color: var(--blue); }
+
+.earnings-item .earn-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.earnings-item .earn-symbol {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.earnings-item .earn-amount {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--green);
+}
+
+.earnings-item .earn-amount.zero {
+  color: var(--text-muted);
+}
+
+.earnings-item .earn-blocks {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.address-form-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  margin-bottom: 24px;
+  overflow: hidden;
+}
+
+.address-form-card .card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.address-form-card .card-header h3 {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.address-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 24px;
+  border-bottom: 1px solid rgba(42, 45, 58, 0.5);
+  transition: var(--transition);
+}
+
+.address-row:last-child {
+  border-bottom: none;
+}
+
+.address-row:hover {
+  background: var(--bg-card-hover);
+}
+
+.address-row .coin-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 130px;
+  flex-shrink: 0;
+}
+
+.address-row .coin-label .coin-badge {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 10px;
+}
+
+.address-row .coin-label .coin-name {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+.address-row input {
+  flex: 1;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px 14px;
+  color: var(--text-primary);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  outline: none;
+  transition: var(--transition);
+}
+
+.address-row input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-dim);
+}
+
+.address-row input::placeholder {
+  color: var(--text-muted);
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+}
+
+.address-row .balance-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--text-muted);
+  min-width: 80px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.address-row .balance-tag.has-balance {
+  color: var(--green);
+}
+
+.save-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 20px 24px;
+  border-top: 1px solid var(--border);
+  background: var(--bg-surface);
+}
+
+.payout-secret-panel {
+  flex: 1 1 320px;
+  max-width: 420px;
+}
+
+.payout-secret-panel label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.payout-secret-panel input {
+  width: 100%;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  color: var(--text-primary);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  outline: none;
+  transition: var(--transition);
+}
+
+.payout-secret-panel input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-dim);
+}
+
+.payout-secret-hint {
+  margin-top: 8px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+.payout-secret-hint.warning {
+  color: var(--accent);
+}
+
+.payout-secret-hint.ready {
+  color: var(--blue);
+}
+
+.save-bar .btn {
+  min-width: 180px;
+  justify-content: center;
+}
+
+.save-bar .btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.payout-msg {
+  text-align: center;
+  padding: 12px;
+  border-radius: var(--radius);
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 16px;
+  display: none;
+}
+
+.payout-msg.success {
+  display: block;
+  background: var(--green-dim);
+  color: var(--green);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.payout-msg.error {
+  display: block;
+  background: var(--red-dim);
+  color: var(--red);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.payout-msg.info {
+  display: block;
+  background: var(--blue-dim);
+  color: var(--blue);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.payout-note {
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 16px;
+  line-height: 1.7;
+}
+
+@media (max-width: 768px) {
+  .payout-lookup { flex-direction: column; }
+  .earnings-grid { grid-template-columns: repeat(2, 1fr); }
+  .address-row { flex-direction: column; align-items: stretch; gap: 8px; }
+  .address-row .coin-label { min-width: unset; }
+  .address-row .balance-tag { text-align: left; }
+  .payout-secret-panel { max-width: none; }
+}
+
+@media (max-width: 480px) {
+  .earnings-grid { grid-template-columns: 1fr; }
+}
+
+/* ===== Footer ===== */
+.footer {
+  border-top: 1px solid var(--border);
+  margin-top: 80px;
+  padding: 48px 0 32px;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 32px;
+  margin-bottom: 32px;
+}
+
+.footer-section h4 {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: var(--text-primary);
+}
+
+.footer-section p, .footer-section li {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.8;
+  list-style: none;
+}
+
+.footer-bottom {
+  border-top: 1px solid var(--border);
+  padding-top: 20px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  .hero h1 { font-size: 32px; }
+  .hero-sub { font-size: 15px; }
+  .hero-actions { flex-direction: column; align-items: center; }
+  .stats-row { grid-template-columns: repeat(2, 1fr); }
+  .coin-grid { grid-template-columns: 1fr; }
+  .features-grid { grid-template-columns: 1fr; }
+  .steps-grid { flex-direction: column; }
+  .step-arrow { display: none; }
+  .merge-mining-banner { flex-direction: column; text-align: center; padding: 28px; }
+  .footer-grid { grid-template-columns: 1fr; }
+  .dashboard-stats { grid-template-columns: repeat(2, 1fr); }
+  .wallet-form { flex-direction: column; }
+
+  .navbar-links {
+    display: none;
+    position: absolute;
+    top: 64px;
+    left: 0;
+    right: 0;
+    background: var(--bg-surface);
+    border-bottom: 1px solid var(--border);
+    flex-direction: column;
+    padding: 12px;
+  }
+  .navbar-links.open { display: flex; }
+  .mobile-toggle { display: flex; }
+}
+
+@media (max-width: 480px) {
+  .hero h1 { font-size: 26px; }
+  .stats-row { grid-template-columns: 1fr; }
+  .dashboard-stats { grid-template-columns: 1fr; }
+}
+
+/* ===== Scrollbar ===== */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--bg-body); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--border-light); }
+</style>
+</head>
+<body>
+
+<!-- ===== NAVBAR ===== -->
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="#" class="navbar-brand" onclick="navigate('home'); return false;">
+      <span class="brand-dragon">&#x1F409;</span>
+      <span class="brand-text">HappyChina Pool</span>
+    </a>
+    <button class="mobile-toggle" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="navbar-links" id="navLinks">
+      <a href="#" class="nav-link active" data-page="home" onclick="navigate('home'); return false;">Home</a>
+      <a href="#" class="nav-link" data-page="dashboard" onclick="navigate('dashboard'); return false;">Dashboard</a>
+      <a href="#" class="nav-link" data-page="blocks" onclick="navigate('blocks'); return false;">Blocks</a>
+      <a href="#" class="nav-link" data-page="getting-started" onclick="navigate('getting-started'); return false;">Getting Started</a>
+      <a href="#" class="nav-link" data-page="payouts" onclick="navigate('payouts'); return false;">Payout Addresses</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ===== HOME PAGE ===== -->
+<div class="page active" id="page-home">
+  <div class="container">
+    <!-- Hero -->
+    <section class="hero">
+      <h1>Multi-Coin Scrypt <span class="accent-text">Mining Pool</span></h1>
+      <p class="hero-sub">
+        Mine Litecoin and earn 8 additional Scrypt coins through merge mining.
+        Low 1% fee, automatic payouts, powered by one mighty L9 ASIC.
+      </p>
+      <div class="hero-actions">
+        <a href="#" class="btn btn-primary btn-lg" onclick="navigate('getting-started'); return false;">Start Mining</a>
+        <a href="#" class="btn btn-secondary btn-lg" onclick="navigate('dashboard'); return false;">View Dashboard</a>
+      </div>
+
+      <div class="stats-row" id="poolStats">
+        <div class="stat-card">
+          <div class="stat-value" id="stat-hashrate">--</div>
+          <div class="stat-label" id="stat-hashrate-label">Pool Hashrate</div>
+          <div class="stat-sub" id="stat-hashrate-note">Loading live pool status...</div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-value" id="stat-workers">--</div>
+          <div class="stat-label">Workers</div>
+        </div>
+        <div class="stat-card blue">
+          <div class="stat-value" id="stat-coins">--</div>
+          <div class="stat-label">Coins</div>
+        </div>
+        <div class="stat-card purple">
+          <div class="stat-value" id="stat-fee">1%</div>
+          <div class="stat-label">Pool Fee</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Merge Mining Banner -->
+    <div class="merge-mining-banner">
+      <div class="merge-mining-icon">&#9935;</div>
+      <div class="merge-mining-content">
+        <h3>Merge Mining &mdash; Mine Once, Earn Many</h3>
+        <p>
+          All coins on this pool use the Scrypt algorithm. When you mine Litecoin, you automatically
+          earn all the auxiliary merge-mined coins at zero extra cost. One miner, many rewards.
+        </p>
+        <div class="merge-coin-tags">
+          <span class="merge-coin-tag parent">LTC (Parent)</span>
+          <span class="merge-coin-tag">DOGE</span>
+          <span class="merge-coin-tag">BELLS</span>
+          <span class="merge-coin-tag">JKC</span>
+          <span class="merge-coin-tag">PEPE</span>
+          <span class="merge-coin-tag">LKY</span>
+          <span class="merge-coin-tag">DINGO</span>
+          <span class="merge-coin-tag">TRMP</span>
+          <span class="merge-coin-tag">FLOP</span>
+          <span class="merge-coin-tag">CRC</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Coin Cards -->
+    <div class="section-header">
+      <div>
+        <h2>Network Status</h2>
+        <div class="section-sub">Live stats from all supported coins</div>
+      </div>
+    </div>
+    <div class="coin-grid" id="coinGrid">
+      <div class="loading"><div class="spinner"></div></div>
+    </div>
+
+    <!-- Features -->
+    <section class="features-section">
+      <div class="section-header">
+        <h2>Why HappyChina Pool?</h2>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">&#9935;</div>
+          <h3>Merge Mining</h3>
+          <p>Mine LTC as the parent coin and automatically earn DOGE, BELLS, FLOP, CRC, and 5 more Scrypt coins at no extra cost.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">&#128176;</div>
+          <h3>Low 1% Fee</h3>
+          <p>Keep more of your mining rewards. Our efficient infrastructure means lower fees for you.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">&#128200;</div>
+          <h3>Real-time Stats</h3>
+          <p>Monitor hashrate, workers, shares, and earnings in real-time through our dashboard and API.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">&#128274;</div>
+          <h3>Automatic Payouts</h3>
+          <p>Regular automatic payouts to your wallet. Low minimum payout threshold on all coins.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">&#9889;</div>
+          <h3>Multiple Ports</h3>
+          <p>Three stratum ports for different difficulty levels. Fixed diff for ASICs, vardiff for large rigs.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">&#128295;</div>
+          <h3>Yiimp Backend</h3>
+          <p>Industry-standard Yiimp pool software. Reliable, battle-tested, and actively maintained.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quick Start -->
+    <section class="steps-section">
+      <div class="section-header">
+        <h2>Start Mining in 3 Steps</h2>
+      </div>
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-num">1</div>
+          <h3>Get a Wallet</h3>
+          <p>Download or use any Litecoin wallet. Your LTC address is your pool username.</p>
+        </div>
+        <div class="step-arrow">&rarr;</div>
+        <div class="step-card">
+          <div class="step-num">2</div>
+          <h3>Configure Miner</h3>
+          <p>Most ASICs should use stratum+tcp://192.168.1.2:3332 for fixed diff, or :3333 for vardiff. Higher ports are available below for larger rentals and higher starting difficulties.</p>
+        </div>
+        <div class="step-arrow">&rarr;</div>
+        <div class="step-card">
+          <div class="step-num">3</div>
+          <h3>Start Earning</h3>
+          <p>Mine LTC and automatically earn all merge-mined coins. Check your dashboard for stats.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- ===== DASHBOARD PAGE ===== -->
+<div class="page" id="page-dashboard">
+  <div class="container">
+    <div class="wallet-input-section">
+      <h2>Miner Dashboard</h2>
+      <p>Enter your wallet address to view your mining statistics</p>
+      <div class="wallet-form">
+        <input type="text" id="walletInput" placeholder="Enter your LTC wallet address..."
+               onkeypress="if(event.key==='Enter') lookupWallet();">
+        <button class="btn btn-primary" onclick="lookupWallet()">Look Up</button>
+      </div>
+    </div>
+
+    <div id="dashboardContent" style="display: none;">
+      <div class="dashboard-stats" id="dashStats"></div>
+
+      <div class="card" id="dashMinersCard" style="display: none;">
+        <div class="card-header">
+          <h2>Workers</h2>
+        </div>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Miner Version</th>
+                <th>Algorithm</th>
+                <th>Difficulty</th>
+                <th>Accepted</th>
+                <th>Rejected</th>
+              </tr>
+            </thead>
+            <tbody id="dashMinersBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card" id="dashPayoutsCard" style="display: none;">
+        <div class="card-header">
+          <h2>Recent Payouts</h2>
+        </div>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>Amount</th>
+                <th>Transaction</th>
+              </tr>
+            </thead>
+            <tbody id="dashPayoutsBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div id="dashboardError" style="display: none;" class="empty-state">
+      <h3>No data found</h3>
+      <p>No mining stats found for this address. Make sure you've entered a valid wallet address that has mined on this pool.</p>
+    </div>
+
+    <div id="dashboardLoading" style="display: none;" class="loading">
+      <div class="spinner"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== BLOCKS PAGE ===== -->
+<div class="page" id="page-blocks">
+  <div class="container" style="padding-top: 32px;">
+    <div class="section-header">
+      <div>
+        <h2>Blocks Found</h2>
+        <div class="section-sub">All blocks discovered by the pool</div>
+      </div>
+    </div>
+
+    <div class="stats-row" id="blockStats">
+      <div class="stat-card">
+        <div class="stat-value" id="blocks-total">--</div>
+        <div class="stat-label">Total Blocks (24h)</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-value" id="blocks-ltc">--</div>
+        <div class="stat-label">LTC Blocks</div>
+      </div>
+      <div class="stat-card blue">
+        <div class="stat-value" id="blocks-aux">--</div>
+        <div class="stat-label">Aux Blocks</div>
+      </div>
+      <div class="stat-card purple">
+        <div class="stat-value" id="blocks-coins">--</div>
+        <div class="stat-label">Coins Mining</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2>Recent Blocks</h2>
+        <div class="tab-bar" id="blockFilterTabs"></div>
+      </div>
+      <div id="blocksTableContainer">
+        <div class="loading"><div class="spinner"></div></div>
+      </div>
+    </div>
+
+    <!-- Also show block counts from currencies API -->
+    <div class="card" style="margin-top: 24px;">
+      <div class="card-header">
+        <h2>Coin Block Summary (24h)</h2>
+      </div>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Coin</th>
+              <th>Name</th>
+              <th>Block Height</th>
+              <th>24h Blocks</th>
+              <th>Block Reward</th>
+              <th>Network Difficulty</th>
+              <th>Last Block Age</th>
+            </tr>
+          </thead>
+          <tbody id="blockSummaryBody">
+            <tr><td colspan="7" class="empty-state">Loading...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== GETTING STARTED PAGE ===== -->
+<div class="page" id="page-getting-started">
+  <div class="container" style="padding-top: 32px;">
+    <div class="getting-started-content">
+      <div class="section-header" style="justify-content: center; text-align: center; flex-direction: column; gap: 8px;">
+        <h2>Getting Started</h2>
+        <div class="section-sub">Everything you need to start mining on HappyChina Pool</div>
+      </div>
+
+      <div class="setup-card">
+        <h3>&#128640; Quick Overview</h3>
+        <p>
+          HappyChina Pool is a Scrypt mining pool running on Yiimp. We support merge mining, meaning
+          when you mine Litecoin (the parent chain), you automatically earn rewards on all auxiliary
+          chains (DOGE, BELLS, JKC, PEPE, LKY, DINGO, TRMP, FLOP, CRC) at no extra cost or hashrate.
+        </p>
+        <p>
+          <strong>No registration required.</strong> Your Litecoin wallet address is your username.
+        </p>
+      </div>
+
+      <div class="setup-card">
+        <h3>&#9881; Stratum Connection Details</h3>
+        <p>Choose the port that best matches your mining hardware:</p>
+        <div class="table-container">
+          <table class="port-table">
+            <thead>
+              <tr>
+                <th>Port</th>
+                <th>Difficulty</th>
+                <th>Type</th>
+                <th>Best For</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="mono" style="color: var(--accent); font-weight: 600;">3332</td>
+                <td>1,000,000 (fixed)</td>
+                <td>Fixed Difficulty</td>
+                <td>ASIC miners (L3+, L7, L9, etc.)</td>
+              </tr>
+              <tr>
+                <td class="mono" style="color: var(--accent); font-weight: 600;">3333</td>
+                <td>1,000,000 start (vardiff)</td>
+                <td>Variable Difficulty</td>
+                <td>Default port when you want automatic tuning</td>
+              </tr>
+              <tr>
+                <td class="mono" style="color: var(--accent); font-weight: 600;">3336</td>
+                <td>50,000,000 start (vardiff)</td>
+                <td>Variable Difficulty</td>
+                <td>Higher-start vardiff for stronger ASICs and moderate rentals</td>
+              </tr>
+              <tr>
+                <td class="mono" style="color: var(--accent); font-weight: 600;">3335</td>
+                <td>500,000,000 start (vardiff)</td>
+                <td>Variable Difficulty</td>
+                <td>High-start vardiff for big rentals and very strong miners</td>
+              </tr>
+              <tr>
+                <td class="mono" style="color: var(--accent); font-weight: 600;">3334</td>
+                <td>2,000,000,000 (fixed)</td>
+                <td>Fixed Difficulty</td>
+                <td>Large rentals and very high hashrate ASICs</td>
+              </tr>
+              <tr>
+                <td class="mono" style="color: var(--accent); font-weight: 600;">3331</td>
+                <td>4,000,000,000 (fixed)</td>
+                <td>Fixed Difficulty</td>
+                <td>Extreme rentals and top-end sustained hashrate</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="setup-card">
+        <h3>&#128421; ASIC Miner Configuration</h3>
+        <p>For Bitmain L-series ASICs (L3+, L7, L9), enter these settings in your miner's web interface:</p>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+Pool URL: stratum+tcp://192.168.1.2:3332
+Worker: YOUR_LTC_ADDRESS.worker1
+Password: c=LTC
+        </div>
+        <p>
+          Replace <code style="color: var(--accent);">YOUR_LTC_ADDRESS</code> with your Litecoin wallet address.
+          The <code style="color: var(--accent);">.worker1</code> suffix is optional and helps you identify
+          individual miners on the dashboard.
+        </p>
+        <p>
+          If you prefer auto-tuning instead of fixed diff, use <code style="color: var(--accent);">3333</code>.
+          For very large rentals, step up to <code style="color: var(--accent);">3335</code>, <code style="color: var(--accent);">3334</code>, or <code style="color: var(--accent);">3331</code> depending on the starting difficulty you want.
+        </p>
+      </div>
+
+      <div class="setup-card">
+        </div>
+      </div>
+
+      <div class="setup-card">
+        <h3>&#128176; Payouts</h3>
+        <p>
+          Payouts are processed automatically by the pool. Each coin is paid out to the wallet
+          address you mine with. For merge-mined coins, you'll need to set up wallet addresses
+          through the Yiimp web interface.
+        </p>
+        <ul style="color: var(--text-secondary); font-size: 14px; padding-left: 20px; line-height: 2;">
+          <li>Pool fee: <strong style="color: var(--accent);">1%</strong></li>
+          <li>Minimum payout: <strong style="color: var(--accent);">0.001</strong> (per coin)</li>
+          <li>Payouts run on a regular schedule</li>
+          <li>Check your balance: <strong style="color: var(--accent);">Dashboard</strong> page with your wallet address</li>
+        </ul>
+      </div>
+
+      <div class="setup-card">
+        <h3>&#9935; Merge Mining Explained</h3>
+        <p>
+          Merge mining (also called Auxiliary Proof-of-Work) allows mining multiple blockchains
+          simultaneously without any additional hashrate. Litecoin serves as the parent chain,
+          and the auxiliary chains piggyback on its proof of work.
+        </p>
+        <p>
+          When the pool finds a valid share for LTC, it checks if that same work is also valid
+          for the auxiliary chains. If it meets the difficulty target of an aux chain, a block is
+          found on that chain too. This is why you earn multiple coins for the price of one.
+        </p>
+        <p><strong>Currently merge-mined coins:</strong></p>
+        <div class="merge-coin-tags" style="margin-top: 8px;">
+          <span class="merge-coin-tag parent">LTC - Litecoin (Parent)</span>
+          <span class="merge-coin-tag">DOGE - Dogecoin</span>
+          <span class="merge-coin-tag">BELLS - Bells</span>
+          <span class="merge-coin-tag">JKC - Junkcoin</span>
+          <span class="merge-coin-tag">PEPE - Pepecoin</span>
+          <span class="merge-coin-tag">LKY - Luckycoin</span>
+          <span class="merge-coin-tag">DINGO - Dingocoin</span>
+          <span class="merge-coin-tag">TRMP - Trumpow</span>
+          <span class="merge-coin-tag">FLOP - Flopcoin</span>
+          <span class="merge-coin-tag">CRC - CraftCoin</span>
+        </div>
+      </div>
+
+      <div class="setup-card">
+        <h3>&#128270; Monitoring Your Miner</h3>
+        <p>You can monitor your mining stats in several ways:</p>
+        <ul style="color: var(--text-secondary); font-size: 14px; padding-left: 20px; line-height: 2;">
+          <li>
+            <strong style="color: var(--text-primary);">Dashboard:</strong>
+            Go to the <a href="#" onclick="navigate('dashboard'); return false;" style="color: var(--accent);">Dashboard</a>
+            and enter your wallet address
+          </li>
+          <li>
+            <strong style="color: var(--text-primary);">Yiimp Web UI:</strong>
+            Visit <a href="/admin" style="color: var(--accent);" target="_blank">/admin</a>
+          </li>
+          <li>
+            <strong style="color: var(--text-primary);">API:</strong>
+            <code style="color: var(--accent);">/api/walletEx?address=YOUR_ADDRESS</code>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PAYOUT ADDRESSES PAGE ===== -->
+<div class="page" id="page-payouts">
+  <div class="container payout-page">
+    <div class="payout-header">
+      <h2>Payout Addresses</h2>
+      <p>Set your wallet addresses for each merge-mined coin. When aux blocks are found, rewards are sent to these addresses.</p>
+      <div class="payout-lookup">
+        <input type="text" id="payoutLtcInput" placeholder="Enter your LTC mining address..."
+               onkeypress="if(event.key==='Enter') loadPayoutData();">
+        <button class="btn btn-primary" onclick="loadPayoutData()">Load</button>
+      </div>
+    </div>
+
+    <div id="payoutMsg" class="payout-msg"></div>
+
+    <!-- 24h Pool Earnings (always visible) -->
+    <div class="earnings-card" style="max-width: 800px; margin: 0 auto 24px;">
+      <div class="card-header">
+        <h3>24h Pool Block Rewards</h3>
+        <span style="font-size: 12px; color: var(--text-muted);">All miners share these rewards proportionally</span>
+      </div>
+      <div class="earnings-grid" id="earningsGrid">
+        <!-- Filled by JS -->
+      </div>
+    </div>
+
+    <div id="payoutContent" style="display: none;">
+      <div class="payout-content">
+
+        <!-- Payout Address Form -->
+        <div class="address-form-card">
+          <div class="card-header">
+            <h3>Your Payout Addresses</h3>
+            <span style="font-size: 12px; color: var(--text-muted);">One address per coin</span>
+          </div>
+          <div id="addressFormRows">
+            <!-- Filled by JS -->
+          </div>
+          <div class="save-bar">
+            <div class="payout-secret-panel">
+              <label for="payoutSecretInput">Payout Secret</label>
+              <input type="password" id="payoutSecretInput" placeholder="Enter the payout secret to unlock saves..." autocomplete="current-password">
+              <div id="payoutSecretHint" class="payout-secret-hint warning">Saving is locked until admin sets a payout secret for this LTC address.</div>
+            </div>
+            <button class="btn btn-primary btn-lg" onclick="savePayoutAddresses()" id="savePayoutBtn">Save Addresses</button>
+          </div>
+        </div>
+
+        <div class="payout-note">
+          Payouts are processed automatically every 3 hours for balances above the minimum threshold (0.001).<br>
+          Your LTC address is used as the master identifier to link all coin addresses together.<br>
+          Address changes now require a payout secret that pool admin sets once for each LTC address.
+        </div>
+      </div>
+    </div>
+
+    <div id="payoutLoading" style="display: none;" class="loading">
+      <div class="spinner"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-section">
+        <h4>&#x1F409; HappyChina Pool</h4>
+        <p>Multi-coin Scrypt mining pool with merge mining. Mine Litecoin and earn 8 additional
+        coins automatically. Low fees, reliable payouts, Yiimp-powered.</p>
+      </div>
+      <div class="footer-section">
+        <h4>Pool Info</h4>
+        <ul>
+          <li>Algorithm: Scrypt</li>
+          <li>Fee: 1%</li>
+          <li>Min Payout: 0.001</li>
+          <li>Backend: Yiimp</li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>Stratum Ports</h4>
+        <ul>
+          <li>3332 - 1M Fixed Diff</li>
+          <li>3333 - 1M Start / Vardiff</li>
+          <li>3336 - 50M Start / Vardiff</li>
+          <li>3335 - 500M Start / Vardiff</li>
+          <li>3334 - 2B Fixed Diff</li>
+          <li>3331 - 4B Fixed Diff</li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>Links</h4>
+        <ul>
+          <li><a href="/admin" target="_blank" style="color: var(--accent);">Yiimp Dashboard</a></li>
+          <li><a href="#" onclick="navigate('getting-started'); return false;" style="color: var(--accent);">Getting Started</a></li>
+          <li><a href="#" onclick="navigate('blocks'); return false;" style="color: var(--accent);">Block Explorer</a></li>
+          <li><a href="#" onclick="navigate('payouts'); return false;" style="color: var(--accent);">Payout Addresses</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 HappyChina Pool. All rights reserved. Powered by Yiimp.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ===== CONFIGURATION =====
+const API_BASE = '/api';
+const DISPLAY_HOST = ['127.0.0.1', 'localhost'].includes(window.location.hostname)
+  ? '192.168.1.2'
+  : (window.location.hostname || '192.168.1.2');
+const STRATUM_HOST = DISPLAY_HOST;
+const REFRESH_INTERVAL = 60000; // 60 seconds
+
+// Coin display config
+const COIN_CONFIG = {
+  LTC:   { name: 'Litecoin',   icon: 'ltc',   order: 0 },
+  DOGE:  { name: 'Dogecoin',   icon: 'doge',  order: 1 },
+  BELLS: { name: 'Bells',      icon: 'bells', order: 2 },
+  JKC:   { name: 'Junkcoin',   icon: 'jkc',   order: 3 },
+  PEPE:  { name: 'Pepecoin',   icon: 'pepe',  order: 4 },
+  LKY:   { name: 'Luckycoin',  icon: 'lky',   order: 5 },
+  DINGO: { name: 'Dingocoin',  icon: 'dingo', order: 6 },
+  TRMP:  { name: 'Trumpow',    icon: 'trmp',  order: 7 },
+  FLOP:  { name: 'Flopcoin',   icon: 'flop',  order: 8 },
+  CRC:   { name: 'CraftCoin',  icon: 'crc',   order: 9 },
+};
+
+// ===== NAVIGATION =====
+let currentPage = 'home';
+
+function navigate(page) {
+  currentPage = page;
+  // Hide all pages
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  // Show target page
+  const target = document.getElementById('page-' + page);
+  if (target) target.classList.add('active');
+  // Update nav links
+  document.querySelectorAll('.nav-link').forEach(l => {
+    l.classList.toggle('active', l.dataset.page === page);
+  });
+  // Close mobile menu
+  document.getElementById('navLinks').classList.remove('open');
+  // Scroll to top
+  window.scrollTo(0, 0);
+  // Load page-specific data
+  if (page === 'blocks') loadBlocks();
+  if (page === 'payouts') initPayoutPage();
+  // Update URL hash
+  history.pushState(null, '', '#' + page);
+}
+
+function toggleMenu() {
+  document.getElementById('navLinks').classList.toggle('open');
+}
+
+// Handle back/forward
+window.addEventListener('popstate', () => {
+  const hash = location.hash.replace('#', '') || 'home';
+  navigate(hash);
+});
+
+// ===== UTILITY FUNCTIONS =====
+function formatHashrate(h) {
+  h = parseFloat(h) || 0;
+  if (h === 0) return '0 H/s';
+  const units = ['H/s', 'KH/s', 'MH/s', 'GH/s', 'TH/s', 'PH/s', 'EH/s'];
+  let i = 0;
+  while (h >= 1000 && i < units.length - 1) { h /= 1000; i++; }
+  return h.toFixed(2) + ' ' + units[i];
+}
+
+function formatNumber(n, decimals = 0) {
+  n = parseFloat(n) || 0;
+  if (n >= 1e15) return (n / 1e15).toFixed(2) + 'P';
+  if (n >= 1e12) return (n / 1e12).toFixed(2) + 'T';
+  if (n >= 1e9) return (n / 1e9).toFixed(2) + 'B';
+  if (n >= 1e6) return (n / 1e6).toFixed(2) + 'M';
+  if (n >= 1e3) return n.toLocaleString(undefined, { maximumFractionDigits: decimals });
+  return n.toFixed(decimals);
+}
+
+function formatDifficulty(d) {
+  d = parseFloat(d) || 0;
+  if (d >= 1e12) return (d / 1e12).toFixed(2) + ' T';
+  if (d >= 1e9) return (d / 1e9).toFixed(2) + ' G';
+  if (d >= 1e6) return (d / 1e6).toFixed(2) + ' M';
+  if (d >= 1e3) return (d / 1e3).toFixed(2) + ' K';
+  return d.toFixed(2);
+}
+
+function formatTimeAgo(seconds) {
+  seconds = parseInt(seconds) || 0;
+  if (seconds === 0) return 'Never';
+  if (seconds < 60) return seconds + 's ago';
+  if (seconds < 3600) return Math.floor(seconds / 60) + 'm ago';
+  if (seconds < 86400) return Math.floor(seconds / 3600) + 'h ago';
+  return Math.floor(seconds / 86400) + 'd ago';
+}
+
+function formatTimestamp(ts) {
+  if (!ts) return '-';
+  const d = new Date(ts * 1000);
+  return d.toLocaleString();
+}
+
+function copyCode(btn) {
+  const block = btn.parentElement;
+  const text = block.textContent.replace('Copy', '').trim();
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Copied!';
+    setTimeout(() => { btn.textContent = 'Copy'; }, 2000);
+  });
+}
+
+function getCoinClass(symbol) {
+  const s = symbol.toLowerCase();
+  return COIN_CONFIG[symbol] ? COIN_CONFIG[symbol].icon : 'default';
+}
+
+// ===== API FUNCTIONS =====
+async function fetchAPI(endpoint) {
+  try {
+    const res = await fetch(API_BASE + endpoint);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const text = await res.text();
+    if (!text) return null;
+    return JSON.parse(text);
+  } catch (e) {
+    console.error('API error:', endpoint, e);
+    return null;
+  }
+}
+
+// ===== HOME PAGE DATA =====
+async function loadHomeData() {
+  const [status, currencies] = await Promise.all([
+    fetchAPI('/status'),
+    fetchAPI('/currencies')
+  ]);
+
+  // Update pool stats
+  if (status) {
+    const scrypt = status.scrypt || Object.values(status)[0] || {};
+    const ltcCoin = currencies && currencies.LTC ? currencies.LTC : null;
+    const liveHashrate = parseFloat((ltcCoin && ltcCoin.hashrate) || scrypt.hashrate || 0);
+    const workers = parseInt((ltcCoin && ltcCoin.workers) || scrypt.workers || 0, 10);
+    const lastShareAge = parseInt(scrypt.last_share_age || 0, 10);
+    const rateWindow = parseInt(scrypt.rate_window || 300, 10);
+
+    let displayHashrate = liveHashrate;
+    let hashrateLabel = 'Pool Hashrate (LTC Live)';
+    let hashrateNote = 'Live LTC parent-chain accepted-share estimate.';
+
+    if (liveHashrate > 0) {
+      hashrateNote = workers > 0
+        ? workers + ' active worker' + (workers !== 1 ? 's' : '') + ' connected.'
+        : 'Live LTC parent-chain accepted-share estimate.';
+    } else if (workers > 0) {
+      displayHashrate = 0;
+      hashrateLabel = 'Pool Hashrate';
+      hashrateNote = workers + ' active worker' + (workers !== 1 ? 's' : '') + ' connected. Waiting for fresh LTC accepted shares.';
+    } else {
+      hashrateNote = lastShareAge > 0
+        ? 'No accepted LTC share inside the last ' + Math.round(rateWindow / 60) + ' minutes.'
+        : 'No active workers right now.';
+    }
+
+    document.getElementById('stat-hashrate').textContent = formatHashrate(displayHashrate);
+    document.getElementById('stat-hashrate-label').textContent = hashrateLabel;
+    document.getElementById('stat-hashrate-note').textContent = hashrateNote;
+    document.getElementById('stat-workers').textContent = workers;
+  }
+
+  if (currencies) {
+    const coinCount = Object.keys(currencies).length;
+    document.getElementById('stat-coins').textContent = coinCount;
+    renderCoinCards(currencies);
+  }
+}
+
+function renderCoinCards(currencies) {
+  const grid = document.getElementById('coinGrid');
+
+  // Sort coins by our custom order
+  const sorted = Object.entries(currencies).sort((a, b) => {
+    const orderA = COIN_CONFIG[a[0]] ? COIN_CONFIG[a[0]].order : 99;
+    const orderB = COIN_CONFIG[b[0]] ? COIN_CONFIG[b[0]].order : 99;
+    return orderA - orderB;
+  });
+
+  if (sorted.length === 0) {
+    grid.innerHTML = '<div class="empty-state"><h3>No coins found</h3></div>';
+    return;
+  }
+
+  grid.innerHTML = sorted.map(([symbol, coin]) => {
+    const config = COIN_CONFIG[symbol] || { name: coin.name, icon: 'default' };
+    return `
+      <div class="coin-card">
+        <div class="coin-card-header">
+          <div class="coin-icon ${getCoinClass(symbol)}">${symbol.substring(0, 3)}</div>
+          <div>
+            <div class="coin-name">${coin.name || config.name}</div>
+            <div class="coin-symbol">${symbol}</div>
+          </div>
+          <span class="coin-algo-badge">Scrypt</span>
+        </div>
+        <div class="coin-stats">
+          <div class="coin-stat">
+            <div class="coin-stat-label">Block Height</div>
+            <div class="coin-stat-value">${(coin.height || 0).toLocaleString()}</div>
+          </div>
+          <div class="coin-stat">
+            <div class="coin-stat-label">Difficulty</div>
+            <div class="coin-stat-value">${formatDifficulty(coin.difficulty)}</div>
+          </div>
+          <div class="coin-stat">
+            <div class="coin-stat-label">Block Reward</div>
+            <div class="coin-stat-value">${parseFloat(coin.reward || 0).toLocaleString(undefined, {maximumFractionDigits: 2})}</div>
+          </div>
+          <div class="coin-stat">
+            <div class="coin-stat-label">Net Hashrate</div>
+            <div class="coin-stat-value">${formatHashrate(coin.network_hashrate || 0)}</div>
+          </div>
+          <div class="coin-stat">
+            <div class="coin-stat-label">24h Blocks</div>
+            <div class="coin-stat-value">${coin['24h_blocks'] || 0}</div>
+          </div>
+          <div class="coin-stat">
+            <div class="coin-stat-label">Last Block</div>
+            <div class="coin-stat-value">${coin.timesincelast ? formatTimeAgo(coin.timesincelast) : 'N/A'}</div>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+// ===== DASHBOARD =====
+async function lookupWallet() {
+  const address = document.getElementById('walletInput').value.trim();
+  if (!address) return;
+
+  document.getElementById('dashboardContent').style.display = 'none';
+  document.getElementById('dashboardError').style.display = 'none';
+  document.getElementById('dashboardLoading').style.display = 'flex';
+
+  const data = await fetchAPI('/walletEx?address=' + encodeURIComponent(address));
+
+  document.getElementById('dashboardLoading').style.display = 'none';
+
+  if (!data || (data.total === 0 && (!data.miners || data.miners.length === 0))) {
+    document.getElementById('dashboardError').style.display = 'block';
+    return;
+  }
+
+  document.getElementById('dashboardContent').style.display = 'block';
+
+  // Render stats
+  const statsHtml = `
+    <div class="dash-stat">
+      <div class="label">Unsold</div>
+      <div class="value">${parseFloat(data.unsold || 0).toFixed(8)}</div>
+    </div>
+    <div class="dash-stat">
+      <div class="label">Balance</div>
+      <div class="value green">${parseFloat(data.balance || 0).toFixed(8)}</div>
+    </div>
+    <div class="dash-stat">
+      <div class="label">Unpaid</div>
+      <div class="value blue">${parseFloat(data.unpaid || 0).toFixed(8)}</div>
+    </div>
+    <div class="dash-stat">
+      <div class="label">Paid (24h)</div>
+      <div class="value">${parseFloat(data.paid24h || 0).toFixed(8)}</div>
+    </div>
+  `;
+  document.getElementById('dashStats').innerHTML = statsHtml;
+
+  // Miners/workers
+  const minersCard = document.getElementById('dashMinersCard');
+  if (data.miners && data.miners.length > 0) {
+    minersCard.style.display = 'block';
+    document.getElementById('dashMinersBody').innerHTML = data.miners.map(m => `
+      <tr>
+        <td class="mono">${m.version || '-'}</td>
+        <td>${m.algo || '-'}</td>
+        <td class="mono">${m.difficulty || '-'}</td>
+        <td class="mono" style="color: var(--green);">${formatNumber(m.accepted, 2)}</td>
+        <td class="mono" style="color: var(--red);">${formatNumber(m.rejected, 2)}</td>
+      </tr>
+    `).join('');
+  } else {
+    minersCard.style.display = 'none';
+  }
+
+  // Payouts
+  const payoutsCard = document.getElementById('dashPayoutsCard');
+  if (data.payouts && data.payouts.length > 0) {
+    payoutsCard.style.display = 'block';
+    document.getElementById('dashPayoutsBody').innerHTML = data.payouts.map(p => `
+      <tr>
+        <td>${formatTimestamp(p.time)}</td>
+        <td class="mono" style="color: var(--green);">${p.amount}</td>
+        <td class="mono" style="font-size: 12px;">${p.tx ? (p.tx.substring(0, 20) + '...') : '-'}</td>
+      </tr>
+    `).join('');
+  } else {
+    payoutsCard.style.display = 'none';
+  }
+}
+
+// ===== BLOCKS PAGE =====
+let blocksData = null;
+let blockFilter = 'all';
+
+async function loadBlocks() {
+  const currencies = await fetchAPI('/currencies');
+
+  if (currencies) {
+    // Calculate block stats from currencies data
+    let totalBlocks24h = 0;
+    let ltcBlocks = 0;
+    let auxBlocks = 0;
+    const coinCount = Object.keys(currencies).length;
+
+    Object.entries(currencies).forEach(([symbol, coin]) => {
+      const b24 = coin['24h_blocks'] || 0;
+      totalBlocks24h += b24;
+      if (symbol === 'LTC') {
+        ltcBlocks = b24;
+      } else {
+        auxBlocks += b24;
+      }
+    });
+
+    document.getElementById('blocks-total').textContent = totalBlocks24h;
+    document.getElementById('blocks-ltc').textContent = ltcBlocks;
+    document.getElementById('blocks-aux').textContent = auxBlocks;
+    document.getElementById('blocks-coins').textContent = coinCount;
+
+    // Render block summary table
+    const sorted = Object.entries(currencies).sort((a, b) => {
+      const orderA = COIN_CONFIG[a[0]] ? COIN_CONFIG[a[0]].order : 99;
+      const orderB = COIN_CONFIG[b[0]] ? COIN_CONFIG[b[0]].order : 99;
+      return orderA - orderB;
+    });
+
+    document.getElementById('blockSummaryBody').innerHTML = sorted.map(([symbol, coin]) => `
+      <tr>
+        <td style="font-weight: 600; color: var(--text-primary);">
+          <span class="coin-icon ${getCoinClass(symbol)}" style="width: 28px; height: 28px; font-size: 10px; display: inline-flex; vertical-align: middle; margin-right: 8px;">${symbol.substring(0, 3)}</span>
+          ${symbol}
+        </td>
+        <td>${coin.name}</td>
+        <td class="mono">${(coin.height || 0).toLocaleString()}</td>
+        <td class="mono" style="color: var(--green); font-weight: 600;">${coin['24h_blocks'] || 0}</td>
+        <td class="mono">${parseFloat(coin.reward || 0).toLocaleString(undefined, {maximumFractionDigits: 2})}</td>
+        <td class="mono">${formatDifficulty(coin.difficulty)}</td>
+        <td>${coin.timesincelast ? formatTimeAgo(coin.timesincelast) : 'N/A'}</td>
+      </tr>
+    `).join('');
+  }
+
+  // Try to load actual blocks data
+  const blocks = await fetchAPI('/blocks');
+  renderBlocksTable(blocks);
+}
+
+function renderBlocksTable(blocks) {
+  const container = document.getElementById('blocksTableContainer');
+
+  if (!blocks || (Array.isArray(blocks) && blocks.length === 0) || (typeof blocks === 'object' && Object.keys(blocks).length === 0)) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <h3>No block data available</h3>
+        <p>The blocks API hasn't recorded any blocks yet. Check the Coin Block Summary table below for 24h block counts.</p>
+      </div>
+    `;
+    document.getElementById('blockFilterTabs').innerHTML = '';
+    return;
+  }
+
+  // Yiimp blocks can be object or array
+  let blockList = [];
+  if (Array.isArray(blocks)) {
+    blockList = blocks;
+  } else {
+    // Object format: { "symbol": [...blocks] } or numbered entries
+    Object.entries(blocks).forEach(([key, val]) => {
+      if (Array.isArray(val)) {
+        val.forEach(b => { b.coin = b.coin || key; blockList.push(b); });
+      } else if (typeof val === 'object') {
+        val.coin = val.coin || key;
+        blockList.push(val);
+      }
+    });
+  }
+
+  if (blockList.length === 0) {
+    container.innerHTML = '<div class="empty-state"><h3>No blocks found</h3></div>';
+    return;
+  }
+
+  // Build filter tabs
+  const coins = [...new Set(blockList.map(b => b.coin || b.symbol || 'Unknown'))].sort();
+  const tabs = document.getElementById('blockFilterTabs');
+  tabs.innerHTML = `<button class="tab-btn active" onclick="filterBlocks('all', this)">All</button>` +
+    coins.map(c => `<button class="tab-btn" onclick="filterBlocks('${c}', this)">${c}</button>`).join('');
+
+  blocksData = blockList;
+  renderFilteredBlocks('all');
+}
+
+function filterBlocks(filter, btn) {
+  blockFilter = filter;
+  document.querySelectorAll('#blockFilterTabs .tab-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderFilteredBlocks(filter);
+}
+
+function renderFilteredBlocks(filter) {
+  if (!blocksData) return;
+  const filtered = filter === 'all' ? blocksData : blocksData.filter(b => (b.coin || b.symbol) === filter);
+  const container = document.getElementById('blocksTableContainer');
+
+  container.innerHTML = `
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Coin</th>
+            <th>Height</th>
+            <th>Amount</th>
+            <th>Difficulty</th>
+            <th>Time</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${filtered.slice(0, 50).map(b => `
+            <tr>
+              <td style="font-weight: 600; color: var(--text-primary);">${b.coin || b.symbol || '-'}</td>
+              <td class="mono">${b.height || '-'}</td>
+              <td class="mono" style="color: var(--green);">${b.amount || '-'}</td>
+              <td class="mono">${b.difficulty ? formatDifficulty(b.difficulty) : '-'}</td>
+              <td>${b.time ? formatTimestamp(b.time) : '-'}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+// ===== AUTO-REFRESH =====
+let refreshTimer = null;
+
+function startAutoRefresh() {
+  loadHomeData();
+  refreshTimer = setInterval(() => {
+    if (currentPage === 'home') loadHomeData();
+  }, REFRESH_INTERVAL);
+}
+
+// ===== PAYOUT ADDRESSES =====
+const PAYOUT_API = '/payout-api';
+const FALLBACK_AUX_COINS_CONFIG = {
+  DOGE:  { name: 'Dogecoin',   icon: 'doge',  placeholder: 'D...' },
+  BELLS: { name: 'Bells',      icon: 'bells', placeholder: 'B...' },
+  JKC:   { name: 'Junkcoin',   icon: 'jkc',   placeholder: 'J...' },
+  PEPE:  { name: 'Pepecoin',   icon: 'pepe',  placeholder: 'P...' },
+  LKY:   { name: 'Luckycoin',  icon: 'lky',   placeholder: 'L...' },
+  DINGO: { name: 'Dingocoin',  icon: 'dingo', placeholder: 'D...' },
+  TRMP:  { name: 'Trumpow',    icon: 'trmp',  placeholder: 'T...' },
+  FLOP:  { name: 'Flopcoin',   icon: 'flop',  placeholder: 'F...' },
+  CRC:   { name: 'CraftCoin',  icon: 'crc',   placeholder: 'Q...' },
+};
+
+let payoutPageInitialized = false;
+let payoutCoinsConfig = null;
+let payoutSecretConfigured = false;
+
+function getAuxCoinsConfig() {
+  return payoutCoinsConfig || FALLBACK_AUX_COINS_CONFIG;
+}
+
+function buildAuxCoinsConfig(coins) {
+  const sortedCoins = [...coins].sort((a, b) => {
+    const orderA = COIN_CONFIG[a.symbol] ? COIN_CONFIG[a.symbol].order : 99;
+    const orderB = COIN_CONFIG[b.symbol] ? COIN_CONFIG[b.symbol].order : 99;
+    if (orderA !== orderB) return orderA - orderB;
+    return (a.id || 0) - (b.id || 0);
+  });
+
+  return Object.fromEntries(sortedCoins.map((coin) => {
+    const known = COIN_CONFIG[coin.symbol] || {};
+    return [coin.symbol, {
+      name: coin.name || known.name || coin.symbol,
+      icon: known.icon || coin.symbol.toLowerCase(),
+      placeholder: `${coin.symbol.charAt(0)}...`,
+    }];
+  }));
+}
+
+async function ensureAuxCoinsConfig() {
+  if (payoutCoinsConfig) {
+    return payoutCoinsConfig;
+  }
+
+  try {
+    const res = await fetch(PAYOUT_API + '?action=coins');
+    const data = await res.json();
+    if (data && Array.isArray(data.coins) && data.coins.length > 0) {
+      payoutCoinsConfig = buildAuxCoinsConfig(data.coins);
+      return payoutCoinsConfig;
+    }
+  } catch (e) {
+    console.error('Aux coin config error:', e);
+  }
+
+  payoutCoinsConfig = FALLBACK_AUX_COINS_CONFIG;
+  return payoutCoinsConfig;
+}
+
+async function initPayoutPage() {
+  // Pre-populate LTC address from dashboard if available
+  const dashInput = document.getElementById('walletInput');
+  const payInput = document.getElementById('payoutLtcInput');
+  if (dashInput && dashInput.value && !payInput.value) {
+    payInput.value = dashInput.value;
+  }
+  // Try loading from localStorage
+  const saved = localStorage.getItem('payoutLtcAddress');
+  if (saved && !payInput.value) {
+    payInput.value = saved;
+  }
+  await ensureAuxCoinsConfig();
+  // Build the address form rows if not built yet
+  if (!payoutPageInitialized) {
+    buildAddressForm();
+    payoutPageInitialized = true;
+  }
+  // Always load pool earnings (visible without address)
+  loadPoolEarnings();
+  // Auto-load address data if address is present
+  if (payInput.value.trim()) {
+    loadPayoutData();
+  }
+}
+
+async function loadPoolEarnings() {
+  try {
+    const res = await fetch(PAYOUT_API + '?action=pool_earnings');
+    const data = await res.json();
+    renderEarningsGrid(data.pool_earnings_24h || {});
+  } catch (e) {
+    console.error('Pool earnings error:', e);
+  }
+}
+
+function buildAddressForm() {
+  const container = document.getElementById('addressFormRows');
+  let html = '';
+  for (const [symbol, cfg] of Object.entries(getAuxCoinsConfig())) {
+    html += `
+      <div class="address-row">
+        <div class="coin-label">
+          <div class="coin-badge coin-icon ${cfg.icon}">${symbol.substring(0,2)}</div>
+          <span class="coin-name">${cfg.name} (${symbol})</span>
+        </div>
+        <input type="text" id="payout-addr-${symbol}" placeholder="Enter ${cfg.name} address..." spellcheck="false" autocomplete="off">
+        <span class="balance-tag" id="payout-bal-${symbol}"></span>
+      </div>
+    `;
+  }
+  container.innerHTML = html;
+}
+
+function showPayoutMsg(text, type) {
+  const el = document.getElementById('payoutMsg');
+  el.textContent = text;
+  el.className = 'payout-msg ' + type;
+  // Auto-hide success after 5s
+  if (type === 'success') {
+    setTimeout(() => { el.className = 'payout-msg'; }, 5000);
+  }
+}
+
+function clearPayoutMsg() {
+  document.getElementById('payoutMsg').className = 'payout-msg';
+}
+
+function setPayoutSaveState(configured) {
+  payoutSecretConfigured = !!configured;
+
+  const btn = document.getElementById('savePayoutBtn');
+  const hint = document.getElementById('payoutSecretHint');
+  const secretInput = document.getElementById('payoutSecretInput');
+
+  if (!btn || !hint || !secretInput) {
+    return;
+  }
+
+  btn.disabled = !payoutSecretConfigured;
+  if (payoutSecretConfigured) {
+    hint.textContent = 'Saving changes requires the payout secret for this LTC address.';
+    hint.className = 'payout-secret-hint ready';
+  } else {
+    secretInput.value = '';
+    hint.textContent = 'Saving is locked until admin sets a payout secret for this LTC address.';
+    hint.className = 'payout-secret-hint warning';
+  }
+}
+
+async function loadPayoutData() {
+  const ltcAddr = document.getElementById('payoutLtcInput').value.trim();
+  if (!ltcAddr) {
+    showPayoutMsg('Please enter your LTC mining address.', 'error');
+    return;
+  }
+
+  // Save to localStorage for convenience
+  localStorage.setItem('payoutLtcAddress', ltcAddr);
+
+  clearPayoutMsg();
+  setPayoutSaveState(false);
+  document.getElementById('payoutSecretInput').value = '';
+  document.getElementById('payoutContent').style.display = 'none';
+  document.getElementById('payoutLoading').style.display = 'flex';
+
+  try {
+    // Fetch saved addresses and pool earnings in parallel
+    const [addrRes, earningsRes] = await Promise.all([
+      fetch(PAYOUT_API + '?action=get&ltc_address=' + encodeURIComponent(ltcAddr)),
+      fetch(PAYOUT_API + '?action=pool_earnings'),
+    ]);
+
+    const addrData = await addrRes.json();
+    const earningsData = await earningsRes.json();
+
+    if (addrData.error) {
+      showPayoutMsg(addrData.error, 'error');
+      document.getElementById('payoutLoading').style.display = 'none';
+      return;
+    }
+
+    // Fill address inputs
+    for (const [symbol, cfg] of Object.entries(getAuxCoinsConfig())) {
+      const input = document.getElementById('payout-addr-' + symbol);
+      const balEl = document.getElementById('payout-bal-' + symbol);
+      if (addrData.addresses && addrData.addresses[symbol]) {
+        input.value = addrData.addresses[symbol].address || '';
+        const bal = addrData.addresses[symbol].balance || 0;
+        if (bal > 0) {
+          balEl.textContent = bal.toFixed(8);
+          balEl.className = 'balance-tag has-balance';
+        } else {
+          balEl.textContent = '';
+          balEl.className = 'balance-tag';
+        }
+      } else {
+        input.value = '';
+        balEl.textContent = '';
+        balEl.className = 'balance-tag';
+      }
+    }
+
+    setPayoutSaveState(!!addrData.secret_configured);
+
+    // Fill earnings grid
+    renderEarningsGrid(earningsData.pool_earnings_24h || {});
+
+    // Show content
+    document.getElementById('payoutLoading').style.display = 'none';
+    document.getElementById('payoutContent').style.display = 'block';
+
+    if (addrData.ltc_account) {
+      showPayoutMsg('Loaded addresses for LTC miner ' + ltcAddr.substring(0, 12) + '...', 'info');
+    } else {
+      showPayoutMsg('No existing LTC account found. You can still set up payout addresses in advance.', 'info');
+    }
+
+  } catch (err) {
+    console.error('Payout load error:', err);
+    showPayoutMsg('Failed to load data. Please try again.', 'error');
+    document.getElementById('payoutLoading').style.display = 'none';
+  }
+}
+
+function renderEarningsGrid(poolEarnings) {
+  const allCoins = { LTC: { name: 'Litecoin', icon: 'ltc' }, ...getAuxCoinsConfig() };
+  const grid = document.getElementById('earningsGrid');
+  let html = '';
+
+  for (const [symbol, cfg] of Object.entries(allCoins)) {
+    const data = poolEarnings[symbol] || { amount: 0, blocks: 0 };
+    const amount = data.amount || 0;
+    const blocks = data.blocks || 0;
+    const amountClass = amount > 0 ? '' : ' zero';
+    const amountStr = amount > 0 ? '+' + formatCoinAmount(amount, symbol) : '0.00';
+
+    html += `
+      <div class="earnings-item">
+        <div class="coin-icon ${cfg.icon}">${symbol.substring(0,2)}</div>
+        <div class="earn-info">
+          <div class="earn-symbol">${symbol}</div>
+          <div class="earn-amount${amountClass}">${amountStr}</div>
+          <div class="earn-blocks">${blocks} block${blocks !== 1 ? 's' : ''}</div>
+        </div>
+      </div>
+    `;
+  }
+  grid.innerHTML = html;
+}
+
+function formatCoinAmount(amount, symbol) {
+  if (amount === 0) return '0.00';
+  // Show more decimals for low-value coins
+  if (amount < 0.001) return amount.toFixed(8);
+  if (amount < 1) return amount.toFixed(6);
+  if (amount < 100) return amount.toFixed(4);
+  return amount.toFixed(2);
+}
+
+async function savePayoutAddresses() {
+  const ltcAddr = document.getElementById('payoutLtcInput').value.trim();
+  if (!ltcAddr) {
+    showPayoutMsg('Please enter your LTC mining address first.', 'error');
+    return;
+  }
+  if (!payoutSecretConfigured) {
+    showPayoutMsg('Saving is locked until admin sets a payout secret for this LTC address.', 'error');
+    return;
+  }
+
+  const payoutSecret = document.getElementById('payoutSecretInput').value.trim();
+  if (!payoutSecret) {
+    showPayoutMsg('Please enter the payout secret before saving.', 'error');
+    return;
+  }
+
+  const addresses = {};
+  let hasAny = false;
+  for (const symbol of Object.keys(getAuxCoinsConfig())) {
+    const val = document.getElementById('payout-addr-' + symbol).value.trim();
+    if (val) {
+      addresses[symbol] = val;
+      hasAny = true;
+    }
+  }
+
+  if (!hasAny) {
+    showPayoutMsg('Please enter at least one coin address to save.', 'error');
+    return;
+  }
+
+  const btn = document.getElementById('savePayoutBtn');
+  const origText = btn.textContent;
+  btn.textContent = 'Saving...';
+  btn.disabled = true;
+
+  try {
+    const res = await fetch(PAYOUT_API + '?action=save', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ltc_address: ltcAddr, payout_secret: payoutSecret, addresses }),
+    });
+    const data = await res.json();
+
+    if (data.error) {
+      showPayoutMsg('Error: ' + data.error, 'error');
+    } else if (data.success) {
+      const savedCount = Object.keys(data.saved || {}).length;
+      const errorCount = Object.keys(data.errors || {}).length;
+      let msg = 'Saved ' + savedCount + ' address' + (savedCount !== 1 ? 'es' : '') + ' successfully!';
+      if (errorCount > 0) {
+        const errCoins = Object.entries(data.errors).map(([k,v]) => k + ': ' + v).join(', ');
+        msg += ' Errors: ' + errCoins;
+        showPayoutMsg(msg, 'info');
+      } else {
+        showPayoutMsg(msg, 'success');
+      }
+    }
+  } catch (err) {
+    console.error('Payout save error:', err);
+    showPayoutMsg('Failed to save. Please try again.', 'error');
+  } finally {
+    btn.textContent = origText;
+    btn.disabled = false;
+  }
+}
+
+// ===== INIT =====
+document.addEventListener('DOMContentLoaded', () => {
+  // Handle initial hash
+  const hash = location.hash.replace('#', '');
+  if (hash && hash !== 'home') {
+    navigate(hash);
+  }
+
+  // Load initial data
+  startAutoRefresh();
+});
+</script>
+
+</body>
+</html>

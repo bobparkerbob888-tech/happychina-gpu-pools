@@ -1,0 +1,28 @@
+manifestVersion: 1.1
+id: happychina-gpu-pools-yiimp
+category: bitcoin
+name: YIIMP
+icon: https://getumbrel.github.io/umbrel-apps-gallery/public-pool/icon.svg
+version: "1.1.0"
+tagline: Custom YIIMP frontend and admin overlay for Umbrel
+description: >-
+  Installs the HappyChina custom YIIMP frontend, secured payout-address editor,
+  admin sweep tools, and corrected port guide on top of an existing host YIIMP
+  install, then exposes it as an Umbrel app.
+developer: HappyChina
+website: https://github.com/bobparkerbob888-tech/happychina-gpu-pools
+dependencies: []
+repo: https://github.com/bobparkerbob888-tech/happychina-gpu-pools
+support: https://github.com/bobparkerbob888-tech/happychina-gpu-pools/issues
+port: 24180
+gallery: []
+path: ""
+defaultUsername: ""
+defaultPassword: ""
+releaseNotes: >-
+  Ships the live Rust-style frontend, payout secret lock, RO sweep admin tools,
+  corrected scrypt port map, and a host-patch container that keeps the YIIMP
+  PHP overlay in sync. Requires an existing host YIIMP install at
+  /data/crypto-data/yiimp/site/web with host web on port 8080.
+submitter: HappyChina
+submission: ""

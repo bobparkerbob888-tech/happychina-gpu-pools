@@ -20,7 +20,7 @@ class AdminController extends CommonController {
 
 	protected function getSweepBookmarks()
 	{
-		return getdbolist('db_bookmarks', "label=:label ORDER BY idcoin", array(':label'=>'RO Sweep'));
+		return getdbolist('db_bookmarks', "label=:label ORDER BY idcoin", array(':label'=>'Pool Sweep'));
 	}
 
 	protected function getSweepCoins()
@@ -31,7 +31,7 @@ class AdminController extends CommonController {
 	protected function getSweepBookmark($coinId)
 	{
 		return getdbosql('db_bookmarks', "label=:label AND idcoin=:idcoin", array(
-			':label' => 'RO Sweep',
+			':label' => 'Pool Sweep',
 			':idcoin' => $coinId,
 		));
 	}
@@ -250,7 +250,7 @@ class AdminController extends CommonController {
 		if(!$this->admin) return;
 
 		$bookmark = getdbo('db_bookmarks', getiparam('id'));
-		if (!$bookmark || $bookmark->label !== 'RO Sweep') {
+		if (!$bookmark || $bookmark->label !== 'Pool Sweep') {
 			user()->setFlash('error', 'invalid sweep bookmark');
 			$this->redirect($this->getSweepReturnUrl('/admin/sweep'));
 			return;
@@ -317,7 +317,7 @@ class AdminController extends CommonController {
 				$bookmark = new db_bookmarks;
 				$bookmark->isNewRecord = true;
 				$bookmark->idcoin = $coin->id;
-				$bookmark->label = 'RO Sweep';
+				$bookmark->label = 'Pool Sweep';
 				$bookmark->address = $address;
 				if ($bookmark->save())
 					$messages[] = "{$coin->symbol}: destination added";

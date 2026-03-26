@@ -1,6 +1,6 @@
 <?php
 /**
- * Payout Addresses API for HappyChina Pool
+ * Payout Addresses API for the HappyChina YIIMP frontend
  * 
  * GET  ?action=get&ltc_address=XXX          - Get saved payout addresses for a miner
  * POST ?action=save  {ltc_address, payout_secret, addresses: {DOGE: "...", ...}}  - Save payout addresses
@@ -19,11 +19,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
-// DB credentials from Yiimp serverconfig
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'oHyqx3MMNsIbH');
-define('DB_USER', 'PanelndRU5noUUACnZ');
-define('DB_PASS', 'cRpM9K1jACOBbAeWKwyKK6l7sg');
+require_once('/etc/yiimp/serverconfig.php');
+
+define('DB_HOST', defined('YAAMP_DBHOST') ? YAAMP_DBHOST : YIIMP_DBHOST);
+define('DB_NAME', defined('YAAMP_DBNAME') ? YAAMP_DBNAME : YIIMP_DBNAME);
+define('DB_USER', defined('YAAMP_DBUSER') ? YAAMP_DBUSER : YIIMP_DBUSER);
+define('DB_PASS', defined('YAAMP_DBPASSWORD') ? YAAMP_DBPASSWORD : YIIMP_DBPASSWORD);
 
 define('PARENT_COIN_ID', 7);
 define('PAYOUT_SECRET_MIN_LENGTH', 10);

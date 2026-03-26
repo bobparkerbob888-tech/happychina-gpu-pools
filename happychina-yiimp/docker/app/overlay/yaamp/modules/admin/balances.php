@@ -85,8 +85,8 @@ p.notes { opacity: 0.7; }
 </div>
 
 <div class="sweep-box">
-	<h3>RO Sweep Addresses</h3>
-	<p class="notes">Edit the RO destination wallet for each active scrypt coin here, then send all configured balances with one button. Blank fields are ignored and leave the current destination unchanged.</p>
+	<h3>Pool Sweep Addresses</h3>
+	<p class="notes">Edit the destination wallet for each active scrypt coin here, then send all configured balances with one button. Blank fields are ignored and leave the current destination unchanged.</p>
 
 	<form method="post" action="/admin/sweepsave?return=<?php echo urlencode($returnUrl); ?>">
 		<table class="dataGrid sweep-table">
@@ -96,7 +96,7 @@ p.notes { opacity: 0.7; }
 					<th>Balance</th>
 					<th>Fee Hint</th>
 					<th>Est. Receive</th>
-					<th>RO Destination</th>
+					<th>Destination</th>
 					<th>Status</th>
 				</tr>
 			</thead>
@@ -115,7 +115,7 @@ p.notes { opacity: 0.7; }
 							type="text"
 							name="sweep_address[<?php echo intval($row['coin']->id); ?>]"
 							value="<?php echo CHtml::encode($row['address']); ?>"
-							placeholder="Set RO destination address"
+							placeholder="Set destination address"
 							maxlength="128"
 						>
 					</td>

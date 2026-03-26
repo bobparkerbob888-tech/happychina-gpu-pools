@@ -2,19 +2,71 @@ services:
   app_proxy:
     environment:
       APP_HOST: yiimp
-      APP_PORT: 80
+      APP_PORT: 8080
     container_name: happychina-yiimp_app_proxy_1
 
-  yiimp:
-    build:
-      context: ./docker/app
-    container_name: happychina-yiimp_1
-    extra_hosts:
-      - host.docker.internal:host-gateway
+  mariadb:
+    image: mariadb:11.4
+    container_name: happychina-yiimp_db_1
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --skip-name-resolve
+      - --innodb-buffer-pool-size=256M
     environment:
-      HOST_WEB_ROOT: /mnt/yiimp-web
-      APP_BACKUP_ROOT: /app-data/backups
+      MYSQL_DATABASE: yaamp
+      MYSQL_USER: yiimp
+      MYSQL_PASSWORD: yiimp
+      MYSQL_ROOT_PASSWORD: yiimp-root
     volumes:
-      - /data/crypto-data/yiimp/site/web:/mnt/yiimp-web
-      - ${APP_DATA_DIR}/data:/app-data
-    restart: on-failure
+      - ${APP_DATA_DIR}/mysql:/var/lib/mysql
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "mariadb-admin ping -h 127.0.0.1 -uroot -p$$MYSQL_ROOT_PASSWORD --silent"]
+      interval: 15s
+      timeout: 10s
+      retries: 20
+
+  daemons:
+    image: ghcr.io/bobparkerbob888-tech/happychina-yiimp-daemons:2.0.0
+    container_name: happychina-yiimp_daemons_1
+    platform: linux/amd64
+    environment:
+      STRATUM_HOST: yiimp
+      STRATUM_NOTIFY_PASSWORD: blocknotify
+    volumes:
+      - ${APP_DATA_DIR}/daemons:/data/daemons
+    restart: unless-stopped
+
+  yiimp:
+    image: ghcr.io/bobparkerbob888-tech/happychina-yiimp-app:2.0.0
+    container_name: happychina-yiimp_1
+    platform: linux/amd64
+    depends_on:
+      mariadb:
+        condition: service_healthy
+      daemons:
+        condition: service_started
+    environment:
+      DB_HOST: mariadb
+      DB_NAME: yaamp
+      DB_USER: yiimp
+      DB_PASSWORD: yiimp
+      DB_ROOT_PASSWORD: yiimp-root
+      POOL_SITE_NAME: HappyChina Pool
+      POOL_SITE_HOST: umbrel.local
+      POOL_STRATUM_HOST: umbrel.local
+      POOL_ADMIN_USER: admin
+      POOL_ADMIN_PASS: umbrelpool
+      POOL_ADMIN_IP: 0.0.0.0/0
+      STRATUM_NOTIFY_PASSWORD: blocknotify
+    volumes:
+      - ${APP_DATA_DIR}/yiimp:/data/yiimp
+    ports:
+      - "3331:3331"
+      - "3332:3332"
+      - "3333:3333"
+      - "3334:3334"
+      - "3335:3335"
+      - "3336:3336"
+    restart: unless-stopped

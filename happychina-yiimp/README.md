@@ -1,114 +1,62 @@
 # HappyChina YIIMP for Umbrel
 
-This is the easy Umbrel app layer for a host YIIMP install.
+This app is a full one-click Yiimp pool install for Umbrel.
 
-If your Umbrel already has YIIMP running on host port `8080`, this app gives
-you the cleaned-up frontend and the admin tools without doing the patching by
-hand.
+Install it, wait for first sync, then point miners at it.
 
-## What this app does
+## What gets installed
 
-On startup it:
+- MariaDB database for Yiimp
+- Yiimp web frontend and backend loops
+- six scrypt stratum ports on `3331` to `3336`
+- public merged-mined daemons for:
+  `LTC`, `DOGE`, `BELLS`, `JKC`, `PEPE`, `LKY`, `DINGO`, `TRMP`
+- the custom HappyChina frontend
+- public payout-address page with payout-secret locking
+- admin sweep tools on `Admin > Balances`
 
-1. Copies the bundled YIIMP overlay files into the host YIIMP web tree.
-2. Backs up the original host files under the app data directory.
-3. Serves the custom Rust-style frontend inside Umbrel.
-4. Proxies the rest of the requests back to your host YIIMP web on `8080`.
+## Hard limits
 
-## What you get
+- target platform: `x86_64` Umbrel
+- first boot is not instant:
+  the daemon container downloads public Linux binaries and the chains still have
+  to sync
+- the packaged merged-mined coins are `LTC`, `DOGE`, `BELLS`, `JKC`, `PEPE`,
+  `LKY`, `DINGO`, and `TRMP`
 
-- Custom public frontend
-- Secured payout-address page with per-LTC payout secrets
-- Admin `Payout Page Lock` section
-- Admin `RO Sweep Addresses` editor
-- Admin `Withdraw All Configured Wallets` action
-- Public wallet API cleanup so worker passwords are no longer exposed
-- Correct live scrypt port guide for `3331` through `3336`
+## Install
 
-## What you still need first
-
-This app is not a full zero-to-node installer.
-
-Before you install it, your Umbrel must already have:
-
-- host YIIMP web at `/data/crypto-data/yiimp/site/web`
-- host YIIMP reachable on `http://127.0.0.1:8080`
-
-It does not install:
-
-- wallet daemons
-- MariaDB
-- PHP-FPM
-- stratum binaries
-
-## Install in simple steps
-
-1. Open Umbrel.
-2. Add this community app store:
+1. In Umbrel, add this community app store:
 
    `https://github.com/bobparkerbob888-tech/happychina-umbrel-apps`
 
-3. Install the `YIIMP` app.
-4. Open the app.
+2. Install `YIIMP`
+3. Wait for the app to finish first boot and daemon sync
+4. Open the app
 
-That is it.
+If the frontend opens but the pool still shows no live data, the daemons are
+still syncing. That is expected on a new install.
 
-## Where to click after install
+## Default admin login
 
-- Public frontend:
-  Open the YIIMP app in Umbrel.
-- Admin login:
-  `/admin/login`
-- Admin balances page:
-  `/admin/balances`
-- Public payout page:
-  `/#payouts`
+- username: `admin`
+- password: `umbrelpool`
 
-## Admin login
+Admin URL:
 
-This app does not create a new admin username or password.
+- `/admin/login`
 
-Use the admin credentials already defined by your host YIIMP config.
+Main admin page:
 
-## Payout secret lock
+- `/admin/balances`
 
-The public payout page is readable, but saving changes is locked behind a
-per-LTC payout secret.
+Public payout page:
 
-To set it:
-
-1. Open `Admin > Balances`
-2. Find `Payout Page Lock`
-3. Enter the LTC mining address
-4. Enter the secret you want
-5. Click `Set / Rotate Secret`
-
-Then the miner owner must enter the same secret on the public payout page
-before address changes can be saved.
-
-## Sweep tools
-
-The same balances page also includes:
-
-- `RO Sweep Addresses`
-- `Save Sweep Addresses`
-- `Withdraw All Configured Wallets`
-
-## Host files patched by the app
-
-- `frontend-rustpool.html`
-- `payout-addresses.php`
-- `yaamp/modules/admin/AdminController.php`
-- `yaamp/modules/admin/balances.php`
-- `yaamp/modules/api/ApiController.php`
-
-Original host copies are saved under:
-
-- `${APP_DATA_DIR}/data/backups/original/...`
+- `/#payouts`
 
 ## Mining setup
 
-For most L3+, L7, and L9 ASICs, use this:
+Default ASIC example:
 
 ```text
 Pool URL: stratum+tcp://YOUR_UMBREL_IP:3332
@@ -116,42 +64,29 @@ Worker: YOUR_LTC_ADDRESS.worker1
 Password: c=LTC
 ```
 
-If you want automatic difficulty tuning, use `3333` instead.
+Port map:
 
-## Scrypt port map
+- `3332`: fixed `1,000,000`
+- `3333`: vardiff start `1,000,000`
+- `3336`: vardiff start `50,000,000`
+- `3335`: vardiff start `500,000,000`
+- `3334`: fixed `2,000,000,000`
+- `3331`: fixed `4,000,000,000`
 
-- `3332`
-  Fixed `1,000,000`
-  Best for normal ASIC use
-- `3333`
-  Vardiff starting at `1,000,000`
-  Best if you want automatic tuning
-- `3336`
-  Vardiff starting at `50,000,000`
-  Best for stronger ASICs and medium rentals
-- `3335`
-  Vardiff starting at `500,000,000`
-  Best for big rentals
-- `3334`
-  Fixed `2,000,000,000`
-  Best for very large rentals or strong fixed-diff use
-- `3331`
-  Fixed `4,000,000,000`
-  Best for extreme rentals and top-end sustained hashrate
+## Payout page
 
-## Troubleshooting
+The public payout page lets a miner load and save aux payout addresses linked to
+an LTC mining address.
 
-If the app opens but data is empty:
+Saving is locked by a payout secret.
 
-- make sure host YIIMP is still on `8080`
-- make sure `/data/crypto-data/yiimp/site/web` exists
-- restart the app once so the overlay is copied again
+To set or rotate that secret:
 
-If the payout page says the address is locked:
+1. Log in to `/admin/login`
+2. Open `/admin/balances`
+3. Use the `Payout Page Lock` section
 
-- go to `Admin > Balances`
-- set or rotate the payout secret for that LTC address
+## Images
 
-If something breaks and you want the original files:
-
-- use the backup copies in `${APP_DATA_DIR}/data/backups/original/...`
+- `ghcr.io/bobparkerbob888-tech/happychina-yiimp-app:2.0.0`
+- `ghcr.io/bobparkerbob888-tech/happychina-yiimp-daemons:2.0.0`

@@ -3,12 +3,12 @@ id: happychina-yiimp
 category: bitcoin
 name: YIIMP
 icon: https://getumbrel.github.io/umbrel-apps-gallery/public-pool/icon.svg
-version: "1.1.0"
-tagline: Custom YIIMP frontend and admin overlay for Umbrel
+version: "2.0.0"
+tagline: One-click Yiimp scrypt pool for Umbrel
 description: >-
-  Installs the HappyChina custom YIIMP frontend, secured payout-address editor,
-  admin sweep tools, and corrected port guide on top of an existing host YIIMP
-  install, then exposes it as an Umbrel app.
+  Full self-hosted Yiimp stack for Umbrel. Installs MariaDB, the HappyChina
+  Yiimp web frontend, six scrypt stratum ports, and public merged-mined wallet
+  daemons for LTC, DOGE, BELLS, JKC, PEPE, LKY, DINGO, and TRMP.
 developer: HappyChina
 website: https://github.com/bobparkerbob888-tech/happychina-umbrel-apps
 dependencies: []
@@ -17,12 +17,12 @@ support: https://github.com/bobparkerbob888-tech/happychina-umbrel-apps/issues
 port: 24180
 gallery: []
 path: ""
-defaultUsername: ""
-defaultPassword: ""
+defaultUsername: "admin"
+defaultPassword: "umbrelpool"
 releaseNotes: >-
-  Ships the live Rust-style frontend, payout secret lock, RO sweep admin tools,
-  corrected scrypt port map, and a host-patch container that keeps the YIIMP
-  PHP overlay in sync. Requires an existing host YIIMP install at
-  /data/crypto-data/yiimp/site/web with host web on port 8080.
+  Full one-click Yiimp install for Umbrel. The app brings up MariaDB, Yiimp,
+  six public stratum ports, the custom frontend, payout-secret tools, and the
+  packaged public merged-mined daemons. This package is intended for x86_64
+  Umbrel nodes.
 submitter: HappyChina
 submission: ""

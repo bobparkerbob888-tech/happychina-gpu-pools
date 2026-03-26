@@ -1360,8 +1360,8 @@ tbody tr:last-child td {
     <section class="hero">
       <h1>Multi-Coin Scrypt <span class="accent-text">Mining Pool</span></h1>
       <p class="hero-sub">
-        Mine Litecoin and earn 8 additional Scrypt coins through merge mining.
-        Low 1% fee, automatic payouts, powered by one mighty L9 ASIC.
+        Mine Litecoin and earn 7 additional Scrypt coins through merge mining.
+        Zero-fee default setup, automatic payouts, and a clean Yiimp frontend.
       </p>
       <div class="hero-actions">
         <a href="#" class="btn btn-primary btn-lg" onclick="navigate('getting-started'); return false;">Start Mining</a>
@@ -1383,7 +1383,7 @@ tbody tr:last-child td {
           <div class="stat-label">Coins</div>
         </div>
         <div class="stat-card purple">
-          <div class="stat-value" id="stat-fee">1%</div>
+          <div class="stat-value" id="stat-fee">0%</div>
           <div class="stat-label">Pool Fee</div>
         </div>
       </div>
@@ -1407,8 +1407,6 @@ tbody tr:last-child td {
           <span class="merge-coin-tag">LKY</span>
           <span class="merge-coin-tag">DINGO</span>
           <span class="merge-coin-tag">TRMP</span>
-          <span class="merge-coin-tag">FLOP</span>
-          <span class="merge-coin-tag">CRC</span>
         </div>
       </div>
     </div>
@@ -1433,12 +1431,12 @@ tbody tr:last-child td {
         <div class="feature-card">
           <div class="feature-icon">&#9935;</div>
           <h3>Merge Mining</h3>
-          <p>Mine LTC as the parent coin and automatically earn DOGE, BELLS, FLOP, CRC, and 5 more Scrypt coins at no extra cost.</p>
+          <p>Mine LTC as the parent coin and automatically earn DOGE, BELLS, JKC, PEPE, LKY, DINGO, and TRMP at no extra cost.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon">&#128176;</div>
-          <h3>Low 1% Fee</h3>
-          <p>Keep more of your mining rewards. Our efficient infrastructure means lower fees for you.</p>
+          <h3>0% Default Fee</h3>
+          <p>Self-hosted installs ship with zero pool fees by default, so you keep the full reward flow unless you change it.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon">&#128200;</div>
@@ -1453,7 +1451,7 @@ tbody tr:last-child td {
         <div class="feature-card">
           <div class="feature-icon">&#9889;</div>
           <h3>Multiple Ports</h3>
-          <p>Three stratum ports for different difficulty levels. Fixed diff for ASICs, vardiff for large rigs.</p>
+          <p>Six stratum ports for different difficulty levels. Fixed diff for ASICs, vardiff for rentals and larger rigs.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon">&#128295;</div>
@@ -1478,7 +1476,7 @@ tbody tr:last-child td {
         <div class="step-card">
           <div class="step-num">2</div>
           <h3>Configure Miner</h3>
-          <p>Most ASICs should use stratum+tcp://192.168.1.2:3332 for fixed diff, or :3333 for vardiff. Higher ports are available below for larger rentals and higher starting difficulties.</p>
+          <p>Most ASICs should use stratum+tcp://YOUR_UMBREL_IP:3332 for fixed diff, or :3333 for vardiff. Higher ports are available below for larger rentals and higher starting difficulties.</p>
         </div>
         <div class="step-arrow">&rarr;</div>
         <div class="step-card">
@@ -1637,7 +1635,7 @@ tbody tr:last-child td {
         <p>
           HappyChina Pool is a Scrypt mining pool running on Yiimp. We support merge mining, meaning
           when you mine Litecoin (the parent chain), you automatically earn rewards on all auxiliary
-          chains (DOGE, BELLS, JKC, PEPE, LKY, DINGO, TRMP, FLOP, CRC) at no extra cost or hashrate.
+          chains (DOGE, BELLS, JKC, PEPE, LKY, DINGO, TRMP) at no extra cost or hashrate.
         </p>
         <p>
           <strong>No registration required.</strong> Your Litecoin wallet address is your username.
@@ -1704,7 +1702,7 @@ tbody tr:last-child td {
         <p>For Bitmain L-series ASICs (L3+, L7, L9), enter these settings in your miner's web interface:</p>
         <div class="code-block">
           <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-Pool URL: stratum+tcp://192.168.1.2:3332
+Pool URL: stratum+tcp://YOUR_UMBREL_IP:3332
 Worker: YOUR_LTC_ADDRESS.worker1
 Password: c=LTC
         </div>
@@ -1731,7 +1729,7 @@ Password: c=LTC
           through the Yiimp web interface.
         </p>
         <ul style="color: var(--text-secondary); font-size: 14px; padding-left: 20px; line-height: 2;">
-          <li>Pool fee: <strong style="color: var(--accent);">1%</strong></li>
+          <li>Pool fee: <strong style="color: var(--accent);">0%</strong> by default</li>
           <li>Minimum payout: <strong style="color: var(--accent);">0.001</strong> (per coin)</li>
           <li>Payouts run on a regular schedule</li>
           <li>Check your balance: <strong style="color: var(--accent);">Dashboard</strong> page with your wallet address</li>
@@ -1760,8 +1758,6 @@ Password: c=LTC
           <span class="merge-coin-tag">LKY - Luckycoin</span>
           <span class="merge-coin-tag">DINGO - Dingocoin</span>
           <span class="merge-coin-tag">TRMP - Trumpow</span>
-          <span class="merge-coin-tag">FLOP - Flopcoin</span>
-          <span class="merge-coin-tag">CRC - CraftCoin</span>
         </div>
       </div>
 
@@ -1856,14 +1852,14 @@ Password: c=LTC
     <div class="footer-grid">
       <div class="footer-section">
         <h4>&#x1F409; HappyChina Pool</h4>
-        <p>Multi-coin Scrypt mining pool with merge mining. Mine Litecoin and earn 8 additional
-        coins automatically. Low fees, reliable payouts, Yiimp-powered.</p>
+        <p>Multi-coin Scrypt mining pool with merge mining. Mine Litecoin and earn 7 additional
+        coins automatically. Zero-fee by default, reliable payouts, Yiimp-powered.</p>
       </div>
       <div class="footer-section">
         <h4>Pool Info</h4>
         <ul>
           <li>Algorithm: Scrypt</li>
-          <li>Fee: 1%</li>
+          <li>Fee: 0% default</li>
           <li>Min Payout: 0.001</li>
           <li>Backend: Yiimp</li>
         </ul>
@@ -1899,8 +1895,8 @@ Password: c=LTC
 // ===== CONFIGURATION =====
 const API_BASE = '/api';
 const DISPLAY_HOST = ['127.0.0.1', 'localhost'].includes(window.location.hostname)
-  ? '192.168.1.2'
-  : (window.location.hostname || '192.168.1.2');
+  ? 'YOUR_UMBREL_IP'
+  : (window.location.hostname || 'YOUR_UMBREL_IP');
 const STRATUM_HOST = DISPLAY_HOST;
 const REFRESH_INTERVAL = 60000; // 60 seconds
 
@@ -1914,8 +1910,6 @@ const COIN_CONFIG = {
   LKY:   { name: 'Luckycoin',  icon: 'lky',   order: 5 },
   DINGO: { name: 'Dingocoin',  icon: 'dingo', order: 6 },
   TRMP:  { name: 'Trumpow',    icon: 'trmp',  order: 7 },
-  FLOP:  { name: 'Flopcoin',   icon: 'flop',  order: 8 },
-  CRC:   { name: 'CraftCoin',  icon: 'crc',   order: 9 },
 };
 
 // ===== NAVIGATION =====
@@ -2366,8 +2360,6 @@ const FALLBACK_AUX_COINS_CONFIG = {
   LKY:   { name: 'Luckycoin',  icon: 'lky',   placeholder: 'L...' },
   DINGO: { name: 'Dingocoin',  icon: 'dingo', placeholder: 'D...' },
   TRMP:  { name: 'Trumpow',    icon: 'trmp',  placeholder: 'T...' },
-  FLOP:  { name: 'Flopcoin',   icon: 'flop',  placeholder: 'F...' },
-  CRC:   { name: 'CraftCoin',  icon: 'crc',   placeholder: 'Q...' },
 };
 
 let payoutPageInitialized = false;

@@ -1,95 +1,81 @@
 # HappyChina Umbrel Apps
 
-Umbrel community app store for HappyChina mining apps and overlays.
+This repo is for the HappyChina YIIMP Umbrel app.
 
-## Apps
+## What is in this repo
 
-### ETHW Mining Pool
-- Full EthereumPoW node (geth fork v1.10.23, snap sync)
-- Open-ethereum-pool stratum server on port 4444
-- Redis-backed pool backend with API on port 8888
-- Dark-themed web dashboard
-- 1% pool fee, 0.1 ETHW minimum payout
+Right now this repo contains one Umbrel app:
 
-### ETC Mining Pool
-- Full Ethereum Classic node (core-geth v1.12.20, snap sync)
-- Open-etc-pool stratum server on port 4445
-- Redis-backed pool backend with API on port 8889
-- Dark-themed web dashboard
-- 1% pool fee, 0.1 ETC minimum payout
+- `YIIMP`
 
-### YIIMP for Umbrel
-- Custom Rust-style YIIMP frontend for Umbrel
-- Public payout-address editor protected by per-LTC payout secrets
-- Admin sweep tools for configured wallet destinations
-- Corrected scrypt port guide for `3331` through `3336`
-- Ships as an Umbrel app image plus host overlay sync
+That app:
 
-Important:
-- The YIIMP app is an overlay for an existing host YIIMP install.
-- It expects host YIIMP web at `/data/crypto-data/yiimp/site/web`
-- It expects host YIIMP to already answer on port `8080`
-- It is the easy app layer, not a zero-to-wallet-daemon installer
+- serves the custom Rust-style YIIMP frontend
+- adds the secured public payout-address page
+- adds the admin payout-secret and sweep tools
+- keeps the YIIMP web overlay files synced
 
-## Installation
+## What this app is for
 
-Add this app store to your Umbrel:
-```
+Use this if your Umbrel box already has a working host YIIMP install at:
+
+- `/data/crypto-data/yiimp/site/web`
+- `http://127.0.0.1:8080`
+
+This app is an overlay/wrapper for that existing install.
+
+It does not install:
+
+- wallet daemons
+- stratum
+- MariaDB
+- PHP-FPM
+- a full pool stack from zero
+
+## Install
+
+Add this community app store URL in Umbrel:
+
+```text
 https://github.com/bobparkerbob888-tech/happychina-umbrel-apps
 ```
 
-Go to **Umbrel > App Store > Community App Stores** and add the URL above.
+Then:
 
-For the YIIMP app:
+1. Open `App Store`
+2. Open `Community App Stores`
+3. Add the repo above
+4. Install `YIIMP`
+5. Open the app
 
-1. Make sure your host YIIMP already works on `8080`
-2. Install the `YIIMP` app from this store
-3. Open the app in Umbrel
-4. Use `/admin/login` for admin access
-5. Use `/admin/balances` to set payout secrets and sweep destinations
+## After install
 
-## Mining
+- Public frontend: open the YIIMP app
+- Admin login: `/admin/login`
+- Admin balances page: `/admin/balances`
+- Public payout page: `/#payouts`
 
-### ETHW
-```
-stratum+tcp://YOUR_UMBREL_IP:4444
-```
-Worker: `0xYOUR_ETHW_ADDRESS.rig_name`
+## Mining ports
 
-### ETC
-```
-stratum+tcp://YOUR_UMBREL_IP:4445
-```
-Worker: `0xYOUR_ETC_ADDRESS.rig_name`
+Current scrypt ports:
 
-### YIIMP Scrypt Ports
-```
-3332 - 1M fixed
-3333 - 1M start vardiff
-3336 - 50M start vardiff
-3335 - 500M start vardiff
-3334 - 2B fixed
-3331 - 4B fixed
-```
+- `3332` fixed `1,000,000`
+- `3333` vardiff starting at `1,000,000`
+- `3336` vardiff starting at `50,000,000`
+- `3335` vardiff starting at `500,000,000`
+- `3334` fixed `2,000,000,000`
+- `3331` fixed `4,000,000,000`
 
-Recommended default for L3+, L7, and L9:
-```
+Recommended default for most L3+, L7, and L9 miners:
+
+```text
 Pool URL: stratum+tcp://YOUR_UMBREL_IP:3332
 Worker: YOUR_LTC_ADDRESS.worker1
 Password: c=LTC
 ```
 
-## Disk Space
+## Image
 
-- ETHW chain: ~50-100GB (pruned snap sync)
-- ETC chain: ~50-100GB (pruned snap sync)
-- Ensure you have at least 300GB free on your Umbrel data partition.
+The published app image is:
 
-## Docker Images
-
-All images are hosted on GitHub Container Registry:
-- `ghcr.io/bobparkerbob888-tech/ethw-geth:v1.10.23`
-- `ghcr.io/bobparkerbob888-tech/open-etc-pool:v1.0.0`
-- `ghcr.io/bobparkerbob888-tech/ethw-pool-frontend:v1.0.0`
-- `ghcr.io/bobparkerbob888-tech/etc-pool-frontend:v1.0.0`
 - `ghcr.io/bobparkerbob888-tech/happychina-yiimp-app:1.1.0`

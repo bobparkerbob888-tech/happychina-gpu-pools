@@ -76,7 +76,8 @@ RUN a2enmod remoteip rewrite \
     && echo "extension=mcrypt.so" >> /etc/php/8.1/cli/php.ini
 
 RUN git clone --branch dev "${YIIMP_REPO}" /src/yiimp \
-    && git -C /src/yiimp checkout "${YIIMP_REF}"
+    && git -C /src/yiimp checkout "${YIIMP_REF}" \
+    && git -C /src/yiimp submodule update --init --recursive
 
 COPY docker/yiimp/patches/coinbase.cpp /src/yiimp/stratum/coinbase.cpp
 COPY docker/yiimp/patches/db.cpp /src/yiimp/stratum/db.cpp

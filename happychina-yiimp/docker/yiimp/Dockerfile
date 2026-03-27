@@ -86,7 +86,8 @@ COPY docker/yiimp/patches/db.cpp /src/yiimp/stratum/db.cpp
 COPY docker/yiimp/patches/coind_submit.cpp /src/yiimp/stratum/coind_submit.cpp
 COPY docker/yiimp/patches/blocks.php /src/yiimp/web/yaamp/core/backend/blocks.php
 
-RUN make -C /src/yiimp/stratum buildonly \
+RUN sed -i 's/-march=native/-march=x86-64 -mtune=generic/' /src/yiimp/stratum/Makefile \
+    && make -C /src/yiimp/stratum buildonly \
     && install -m 0755 /src/yiimp/stratum/stratum /usr/local/bin/stratum
 
 RUN mkdir -p /opt/happychina-yiimp/sql /var/www /var/yiimp2 \

@@ -175,6 +175,8 @@ defined('YIIMP_MYSQLDUMP_USER') or define('YIIMP_MYSQLDUMP_USER', 'root');
 defined('YIIMP_MYSQLDUMP_PASS') or define('YIIMP_MYSQLDUMP_PASS', '${DB_ROOT_PASSWORD}');
 defined('YIIMP_MYSQLDUMP_PATH') or define('YIIMP_MYSQLDUMP_PATH', '${BACKUP_ROOT}');
 defined('EXCH_AUTO_WITHDRAW') or define('EXCH_AUTO_WITHDRAW', 9999.9999);
+defined('EXCH_NESTEX_KEY') or define('EXCH_NESTEX_KEY', '');
+defined('EXCH_NESTEX_SECRET') or define('EXCH_NESTEX_SECRET', '');
 PHP
 
   printf '%s\n' "${POOL_ADMIN_USER}" > "${DATA_ROOT}/admin-user.txt"
@@ -276,6 +278,12 @@ normalize_seeded_pool_config() {
   mysql_exec -e "
     UPDATE coins
     SET auto_exchange = 1
+    WHERE algo = 'scrypt' AND symbol IN ('LTC', 'DOGE', 'BELLS', 'JKC', 'PEPE', 'LKY', 'DINGO', 'TRMP');
+  "
+
+  mysql_exec -e "
+    UPDATE coins
+    SET auto_ready = 1
     WHERE algo = 'scrypt' AND symbol IN ('LTC', 'DOGE', 'BELLS', 'JKC', 'PEPE', 'LKY', 'DINGO', 'TRMP');
   "
 }

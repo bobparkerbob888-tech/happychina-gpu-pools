@@ -3,7 +3,7 @@ id: happychina-yiimp
 category: bitcoin
 name: YIIMP
 icon: https://getumbrel.github.io/umbrel-apps-gallery/public-pool/icon.svg
-version: "2.1.9"
+version: "2.1.10"
 tagline: One-click Yiimp scrypt pool for Umbrel
 description: >-
   Full self-hosted Yiimp stack for Umbrel. Installs MariaDB, the HappyChina
@@ -20,8 +20,8 @@ path: ""
 defaultUsername: "admin"
 defaultPassword: "umbrelpool"
 releaseNotes: >-
-  Fixes the daemon bootstrap to download release archives into local temp
-  storage, validate them there, and only then move them into the persistent
-  cache. This avoids DOGE download corruption on live bind-mounted caches.
+  Fixes bootstrap on upgrades by restoring auto_ready for the curated scrypt
+  coins and defining the missing NestEX keys so PHP 8 no longer crashes the
+  cron path.
 submitter: HappyChina
 submission: ""

@@ -42,7 +42,7 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ matrix.image_name }}
           tags: |
             type=raw,value=latest
-            type=raw,value=2.1.8
+            type=raw,value=2.1.9
       - name: Build image
         shell: bash
         run: |

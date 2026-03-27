@@ -58,9 +58,11 @@ validate_archive() {
 download_release_asset() {
   local asset_url="$1"
   local archive_path="$2"
-  local tmp_path="${archive_path}.part"
+  local tmp_dir
+  local tmp_path
 
-  rm -f "${tmp_path}"
+  tmp_dir="$(mktemp -d)"
+  tmp_path="${tmp_dir}/$(basename "${archive_path}")"
 
   if [ -n "${GITHUB_TOKEN}" ]; then
     curl -fL \
@@ -82,12 +84,13 @@ download_release_asset() {
   fi
 
   if ! validate_archive "${tmp_path}"; then
-    rm -f "${tmp_path}"
+    rm -rf "${tmp_dir}"
     log "downloaded archive failed validation: ${asset_url}"
     return 1
   fi
 
   mv -f "${tmp_path}" "${archive_path}"
+  rmdir "${tmp_dir}"
 }
 
 extract_archive() {

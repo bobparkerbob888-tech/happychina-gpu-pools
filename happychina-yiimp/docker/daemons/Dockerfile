@@ -22,6 +22,7 @@ RUN mkdir -p /opt/prebuilt/JKC /opt/prebuilt/PEPE /opt/prebuilt/DINGO /opt/prebu
 RUN git clone --depth 1 --branch v3.1.1 \
         https://github.com/Junkcoin-Foundation/junkcoin-core.git /src/junkcoin \
     && cd /src/junkcoin \
+    && chmod +x autogen.sh \
     && ./autogen.sh \
     && ./configure --without-gui --without-miniupnpc --without-natpmp \
         --disable-tests --disable-bench --disable-man \
@@ -33,6 +34,7 @@ RUN git clone --depth 1 --branch v3.1.1 \
 RUN git clone --depth 1 --branch 'v.021.2.1' \
         https://github.com/pepecoin-project/pepecoin.git /src/pepecoin \
     && cd /src/pepecoin \
+    && chmod +x autogen.sh \
     && ./autogen.sh \
     && ./configure --without-gui --without-miniupnpc --without-natpmp \
         --disable-tests --disable-bench --disable-man \
@@ -45,6 +47,7 @@ RUN git clone --depth 1 --branch 'v.021.2.1' \
 RUN git clone --depth 1 --branch v1.18.0.0 \
         https://github.com/dingocoin/dingocoin.git /src/dingocoin \
     && cd /src/dingocoin \
+    && chmod +x autogen.sh \
     && ./autogen.sh \
     && ./configure --without-gui --without-miniupnpc --without-natpmp \
         --disable-tests --disable-bench --disable-man \
@@ -56,6 +59,7 @@ RUN git clone --depth 1 --branch v1.18.0.0 \
 RUN git clone --depth 1 --branch v1.2.1 \
         https://github.com/trumpowppc/trumpow.git /src/trumpow \
     && cd /src/trumpow \
+    && chmod +x autogen.sh \
     && ./autogen.sh \
     && ./configure --without-gui --without-miniupnpc --without-natpmp \
         --disable-tests --disable-bench --disable-man \

@@ -36,6 +36,60 @@ github_api() {
   fi
 }
 
+validate_archive() {
+  local archive_path="$1"
+
+  case "${archive_path}" in
+    *.tar.gz|*.tgz)
+      tar -tzf "${archive_path}" >/dev/null
+      ;;
+    *.tar.xz)
+      tar -tJf "${archive_path}" >/dev/null
+      ;;
+    *.zip)
+      unzip -tqq "${archive_path}" >/dev/null
+      ;;
+    *)
+      return 1
+      ;;
+  esac
+}
+
+download_release_asset() {
+  local asset_url="$1"
+  local archive_path="$2"
+  local tmp_path="${archive_path}.part"
+
+  rm -f "${tmp_path}"
+
+  if [ -n "${GITHUB_TOKEN}" ]; then
+    curl -fL \
+      --retry 6 \
+      --retry-delay 2 \
+      --retry-all-errors \
+      --connect-timeout 20 \
+      -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+      -o "${tmp_path}" \
+      "${asset_url}"
+  else
+    curl -fL \
+      --retry 6 \
+      --retry-delay 2 \
+      --retry-all-errors \
+      --connect-timeout 20 \
+      -o "${tmp_path}" \
+      "${asset_url}"
+  fi
+
+  if ! validate_archive "${tmp_path}"; then
+    rm -f "${tmp_path}"
+    log "downloaded archive failed validation: ${asset_url}"
+    return 1
+  fi
+
+  mv -f "${tmp_path}" "${archive_path}"
+}
+
 extract_archive() {
   local archive_path="$1"
   local output_dir="$2"
@@ -110,8 +164,13 @@ install_coin_release() {
 
   if [ ! -x "${release_dir}/${daemon_name}" ]; then
     log "installing ${symbol} ${tag}"
+    if [ -f "${archive_path}" ] && ! validate_archive "${archive_path}"; then
+      log "cached archive for ${symbol} is invalid, redownloading"
+      rm -f "${archive_path}"
+    fi
+
     if [ ! -f "${archive_path}" ]; then
-      curl -fL -o "${archive_path}" "${asset_url}"
+      download_release_asset "${asset_url}" "${archive_path}"
     fi
 
     rm -rf "${release_dir}"

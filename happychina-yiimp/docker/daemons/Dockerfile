@@ -13,7 +13,7 @@ RUN apt-get update \
         libboost-system-dev libboost-thread-dev libboost-chrono-dev \
         libboost-test-dev \
         libdb5.3-dev libdb5.3++-dev \
-        libevent-dev libssl-dev libtool pkg-config python3 bsdmainutils \
+        libevent-dev libfmt-dev libssl-dev libtool pkg-config python3 bsdmainutils \
     && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p /opt/prebuilt/JKC /opt/prebuilt/PEPE /opt/prebuilt/DINGO /opt/prebuilt/TRMP
@@ -88,6 +88,7 @@ RUN apt-get update \
         libboost-chrono1.74.0 \
         libdb5.3 libdb5.3++ \
         libevent-2.1-7 libevent-pthreads-2.1-7 \
+        libfmt8 \
         libssl3 \
         netcat-openbsd \
         procps \

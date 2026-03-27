@@ -30,7 +30,7 @@ jobs:
           - image_name: happychina-yiimp-daemons
             context: ./happychina-yiimp
             dockerfile: ./happychina-yiimp/docker/daemons/Dockerfile
-            platforms: linux/amd64,linux/arm64
+            platforms: linux/amd64
     steps:
       - uses: actions/checkout@v4
       - uses: docker/setup-qemu-action@v3
@@ -46,7 +46,7 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ matrix.image_name }}
           tags: |
             type=raw,value=latest
-            type=raw,value=2.1.4
+            type=raw,value=2.1.5
       - uses: docker/build-push-action@v5
         with:
           context: ${{ matrix.context }}

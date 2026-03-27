@@ -32,8 +32,9 @@ services:
       retries: 20
 
   daemons:
-    image: ghcr.io/bobparkerbob888-tech/happychina-yiimp-daemons:2.1.4
+    image: ghcr.io/bobparkerbob888-tech/happychina-yiimp-daemons:2.1.5
     container_name: happychina-yiimp_daemons_1
+    platform: linux/amd64
     environment:
       STRATUM_HOST: yiimp
       STRATUM_NOTIFY_PASSWORD: blocknotify
@@ -42,7 +43,7 @@ services:
     restart: unless-stopped
 
   yiimp:
-    image: ghcr.io/bobparkerbob888-tech/happychina-yiimp-app:2.1.4
+    image: ghcr.io/bobparkerbob888-tech/happychina-yiimp-app:2.1.5
     container_name: happychina-yiimp_1
     platform: linux/amd64
     depends_on:

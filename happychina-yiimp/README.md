@@ -88,5 +88,5 @@ To set or rotate that secret:
 
 ## Images
 
-- `ghcr.io/bobparkerbob888-tech/happychina-yiimp-app:2.1.0`
-- `ghcr.io/bobparkerbob888-tech/happychina-yiimp-daemons:2.1.0`
+- `ghcr.io/bobparkerbob888-tech/happychina-yiimp-app:2.1.1`
+- `ghcr.io/bobparkerbob888-tech/happychina-yiimp-daemons:2.1.1`

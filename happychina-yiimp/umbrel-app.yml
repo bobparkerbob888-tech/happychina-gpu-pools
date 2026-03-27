@@ -3,7 +3,7 @@ id: happychina-yiimp
 category: bitcoin
 name: YIIMP
 icon: https://getumbrel.github.io/umbrel-apps-gallery/public-pool/icon.svg
-version: "2.1.0"
+version: "2.1.1"
 tagline: One-click Yiimp scrypt pool for Umbrel
 description: >-
   Full self-hosted Yiimp stack for Umbrel. Installs MariaDB, the HappyChina
@@ -20,8 +20,8 @@ path: ""
 defaultUsername: "admin"
 defaultPassword: "umbrelpool"
 releaseNotes: >-
-  Multi-arch build (x86_64 + arm64). JKC, PEPE, DINGO, TRMP now compiled from
-  source for ARM64 support. LTC, DOGE, BELLS, LKY use official release binaries
-  on both architectures.
+  Fixes the scrypt API port mapping so the pool advertises 3332 instead of the
+  stale legacy 3433 value on upgrades, and hardens stratum supervision so crash
+  waves do not leave ports stuck in FATAL state.
 submitter: HappyChina
 submission: ""

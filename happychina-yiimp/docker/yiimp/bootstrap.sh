@@ -262,6 +262,12 @@ seed_pool_if_needed() {
 
 normalize_seeded_pool_config() {
   mysql_exec -e "
+    UPDATE algos
+    SET color = '#c0c0e0', speedfactor = 1, port = 3332, visible = 1
+    WHERE name = 'scrypt';
+  "
+
+  mysql_exec -e "
     UPDATE coins
     SET hasgetinfo = 0
     WHERE algo = 'scrypt' AND symbol IN ('LTC', 'BELLS');

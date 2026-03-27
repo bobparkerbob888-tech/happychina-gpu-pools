@@ -34,7 +34,7 @@ RUN git clone --depth 1 --branch v3.1.1 \
 RUN git clone --depth 1 --branch 'v.021.2.1' \
         https://github.com/pepecoin-project/pepecoin.git /src/pepecoin \
     && cd /src/pepecoin \
-    && chmod +x autogen.sh \
+    && chmod +x autogen.sh share/genbuild.sh \
     && ./autogen.sh \
     && ./configure --without-gui --without-miniupnpc --without-natpmp \
         --disable-tests --disable-bench --disable-man \

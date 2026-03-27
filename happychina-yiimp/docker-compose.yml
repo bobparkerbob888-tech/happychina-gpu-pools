@@ -44,6 +44,7 @@ services:
   yiimp:
     image: ghcr.io/bobparkerbob888-tech/happychina-yiimp-app:2.1.1
     container_name: happychina-yiimp_1
+    platform: linux/amd64
     depends_on:
       mariadb:
         condition: service_healthy

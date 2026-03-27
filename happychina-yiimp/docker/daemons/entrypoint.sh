@@ -16,6 +16,7 @@ STRATUM_HOST="${STRATUM_HOST:-yiimp}"
 STRATUM_NOTIFY_PASSWORD="${STRATUM_NOTIFY_PASSWORD:-blocknotify}"
 STRATUM_PORTS="${STRATUM_PORTS:-3331 3332 3333 3334 3335 3336}"
 GITHUB_TOKEN="${GITHUB_TOKEN:-}"
+HOST_ARCH="$(uname -m)"
 
 log() {
   printf '[yiimp-daemons] %s\n' "$*"
@@ -59,7 +60,7 @@ extract_archive() {
 install_coin_release() {
   local symbol="$1"
   local repo="$2"
-  local asset_pattern="$3"
+  local asset_pattern="${3//__ARCH__/${HOST_ARCH}}"
   local daemon_name="$4"
   local cli_name="$5"
   local install_root="${BIN_ROOT}/${symbol}"

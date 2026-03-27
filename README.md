@@ -24,7 +24,7 @@ Then install `YIIMP`.
 
 What to expect:
 
-- this package is built for `arm64` (aarch64) Umbrel nodes
+- this package supports both `x86_64` and `arm64` Umbrel nodes
 - first boot downloads the public wallet binaries and starts chain sync, so the pool is not ready instantly
 - the packaged merged-mined set is the public coin list shown above
 
@@ -43,5 +43,5 @@ Password: c=LTC
 
 Published images:
 
-- `ghcr.io/bobparkerbob888-tech/happychina-yiimp-app:2.1.0-arm64`
-- `ghcr.io/bobparkerbob888-tech/happychina-yiimp-daemons:2.1.0-arm64`
+- `ghcr.io/bobparkerbob888-tech/happychina-yiimp-app:2.1.0`
+- `ghcr.io/bobparkerbob888-tech/happychina-yiimp-daemons:2.1.0`

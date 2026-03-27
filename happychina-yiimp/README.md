@@ -17,7 +17,7 @@ Install it, wait for first sync, then point miners at it.
 
 ## Hard limits
 
-- target platform: `arm64` (aarch64) Umbrel
+- target platform: `x86_64` and `arm64` Umbrel
 - first boot is not instant:
   the daemon container downloads public Linux binaries and the chains still have
   to sync
@@ -88,5 +88,5 @@ To set or rotate that secret:
 
 ## Images
 
-- `ghcr.io/bobparkerbob888-tech/happychina-yiimp-app:2.1.0-arm64`
-- `ghcr.io/bobparkerbob888-tech/happychina-yiimp-daemons:2.1.0-arm64`
+- `ghcr.io/bobparkerbob888-tech/happychina-yiimp-app:2.1.0`
+- `ghcr.io/bobparkerbob888-tech/happychina-yiimp-daemons:2.1.0`

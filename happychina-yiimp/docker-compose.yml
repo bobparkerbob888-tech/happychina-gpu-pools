@@ -32,7 +32,7 @@ services:
       retries: 20
 
   daemons:
-    image: ghcr.io/bobparkerbob888-tech/happychina-yiimp-daemons:2.1.6
+    image: ghcr.io/bobparkerbob888-tech/happychina-yiimp-daemons:2.1.7
     container_name: happychina-yiimp_daemons_1
     platform: linux/amd64
     environment:
@@ -43,7 +43,7 @@ services:
     restart: unless-stopped
 
   yiimp:
-    image: ghcr.io/bobparkerbob888-tech/happychina-yiimp-app:2.1.6
+    image: ghcr.io/bobparkerbob888-tech/happychina-yiimp-app:2.1.7
     container_name: happychina-yiimp_1
     platform: linux/amd64
     depends_on:

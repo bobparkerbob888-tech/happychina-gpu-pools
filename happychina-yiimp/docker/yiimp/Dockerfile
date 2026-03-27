@@ -1,4 +1,4 @@
-FROM ubuntu:22.04
+FROM mirror.gcr.io/library/ubuntu:22.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV YIIMP_REPO=https://github.com/Kudaraidee/yiimp.git

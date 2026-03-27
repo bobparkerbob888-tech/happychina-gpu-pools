@@ -1,7 +1,7 @@
 # ---------------------------------------------------------------------------
 # Stage 1 — build JKC, PEPE, DINGO, TRMP from source (no ARM64 releases)
 # ---------------------------------------------------------------------------
-FROM ubuntu:22.04 AS builder
+FROM mirror.gcr.io/library/ubuntu:22.04 AS builder
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -70,7 +70,7 @@ RUN git clone --depth 1 --branch v1.2.1 \
 # ---------------------------------------------------------------------------
 # Stage 2 — final runtime image
 # ---------------------------------------------------------------------------
-FROM ubuntu:22.04
+FROM mirror.gcr.io/library/ubuntu:22.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 

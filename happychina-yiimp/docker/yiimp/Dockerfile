@@ -86,8 +86,7 @@ COPY docker/yiimp/patches/db.cpp /src/yiimp/stratum/db.cpp
 COPY docker/yiimp/patches/coind_submit.cpp /src/yiimp/stratum/coind_submit.cpp
 COPY docker/yiimp/patches/blocks.php /src/yiimp/web/yaamp/core/backend/blocks.php
 
-RUN sed -i '/-march=native/d' /src/yiimp/stratum/Makefile \
-    && sed -i '/-mtune=native/d' /src/yiimp/stratum/Makefile \
+RUN sed -i 's/-march=native//g; s/-mtune=native//g' /src/yiimp/stratum/Makefile \
     && make -C /src/yiimp/stratum buildonly \
     && install -m 0755 /src/yiimp/stratum/stratum /usr/local/bin/stratum
 

@@ -43,5 +43,5 @@ Password: c=LTC
 
 Published images:
 
-- `ghcr.io/bobparkerbob888-tech/happychina-yiimp-app:2.0.1`
-- `ghcr.io/bobparkerbob888-tech/happychina-yiimp-daemons:2.0.1`
+- `ghcr.io/bobparkerbob888-tech/happychina-yiimp-app:2.0.2`
+- `ghcr.io/bobparkerbob888-tech/happychina-yiimp-daemons:2.0.2`

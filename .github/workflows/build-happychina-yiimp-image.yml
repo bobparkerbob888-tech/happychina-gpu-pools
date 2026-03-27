@@ -43,7 +43,7 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ matrix.image_name }}
           tags: |
             type=raw,value=latest
-            type=raw,value=2.0.1
+            type=raw,value=2.0.2
       - uses: docker/build-push-action@v5
         with:
           context: ${{ matrix.context }}

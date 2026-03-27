@@ -47,7 +47,7 @@ mysql_exec_force_file() {
 
 wait_for_db() {
   local try=0
-  until MYSQL_PWD="${DB_ROOT_PASSWORD}" mysqladmin ping -h "${DB_HOST}" -u root --silent >/dev/null 2>&1; do
+  until db_admin_ping; do
     try=$((try + 1))
     if [ "${try}" -ge 60 ]; then
       log "database did not become ready in time"
@@ -55,6 +55,20 @@ wait_for_db() {
     fi
     sleep 5
   done
+}
+
+db_admin_ping() {
+  if command -v mysqladmin >/dev/null 2>&1; then
+    MYSQL_PWD="${DB_ROOT_PASSWORD}" mysqladmin ping -h "${DB_HOST}" -u root --silent >/dev/null 2>&1
+    return
+  fi
+
+  if command -v mariadb-admin >/dev/null 2>&1; then
+    MYSQL_PWD="${DB_ROOT_PASSWORD}" mariadb-admin ping -h "${DB_HOST}" -u root --silent >/dev/null 2>&1
+    return
+  fi
+
+  return 1
 }
 
 write_serverconfig() {

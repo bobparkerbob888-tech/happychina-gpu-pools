@@ -3,7 +3,7 @@ id: happychina-yiimp
 category: bitcoin
 name: YIIMP
 icon: https://getumbrel.github.io/umbrel-apps-gallery/public-pool/icon.svg
-version: "2.0.3"
+version: "2.1.0-arm64"
 tagline: One-click Yiimp scrypt pool for Umbrel
 description: >-
   Full self-hosted Yiimp stack for Umbrel. Installs MariaDB, the HappyChina
@@ -20,8 +20,8 @@ path: ""
 defaultUsername: "admin"
 defaultPassword: "umbrelpool"
 releaseNotes: >-
-  Full one-click Yiimp install for Umbrel. This release fixes fresh-install DB
-  startup and rebuilds stratum for generic x86_64 CPUs so published images do
-  not depend on GitHub runner CPU flags.
+  ARM64 build of the one-click Yiimp pool for Umbrel. Stratum compiled natively
+  for aarch64. LTC, DOGE, BELLS, LKY use official ARM64 binaries; JKC, PEPE,
+  DINGO, TRMP compiled from source for ARM64.
 submitter: HappyChina
 submission: ""

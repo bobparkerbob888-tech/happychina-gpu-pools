@@ -8,6 +8,7 @@ RUN_ROOT="${DATA_ROOT}/run"
 SUPERVISOR_CONF=/etc/supervisor/conf.d/daemons.conf
 NOTIFY_SCRIPT=/usr/local/bin/scrypt-blocknotify-all.sh
 COINS_FILE=/opt/happychina-yiimp/daemons/coins.tsv
+PREBUILT_ROOT=/opt/happychina-yiimp/daemons/prebuilt
 
 RPC_USER="${RPC_USER:-umbrel}"
 RPC_PASSWORD="${RPC_PASSWORD:-umbrel}"
@@ -61,12 +62,26 @@ install_coin_release() {
   local asset_pattern="$3"
   local daemon_name="$4"
   local cli_name="$5"
+  local install_root="${BIN_ROOT}/${symbol}"
+
+  # Handle coins compiled from source and baked into the image
+  if [ "${asset_pattern}" = "PREBUILT" ]; then
+    local prebuilt_dir="${PREBUILT_ROOT}/${symbol}"
+    if [ -x "${prebuilt_dir}/${daemon_name}" ]; then
+      mkdir -p "${install_root}"
+      ln -sfn "${prebuilt_dir}" "${install_root}/current"
+      log "${symbol}: using prebuilt binary"
+      return 0
+    fi
+    log "${symbol}: prebuilt binary not found at ${prebuilt_dir}/${daemon_name}"
+    exit 1
+  fi
+
   local release_json
   local tag
   local asset_url
   local asset_name
   local symbol_cache
-  local install_root
   local release_dir
   local archive_path
   local extract_dir
@@ -87,7 +102,6 @@ install_coin_release() {
 
   asset_name="$(basename "${asset_url}")"
   symbol_cache="${CACHE_ROOT}/${symbol}"
-  install_root="${BIN_ROOT}/${symbol}"
   release_dir="${install_root}/${tag}"
   archive_path="${symbol_cache}/${asset_name}"
 

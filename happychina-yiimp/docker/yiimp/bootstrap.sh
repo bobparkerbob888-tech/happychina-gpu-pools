@@ -47,7 +47,7 @@ mysql_exec_force_file() {
 
 wait_for_db() {
   local try=0
-  until MYSQL_PWD="${DB_ROOT_PASSWORD}" mariadb-admin ping -h "${DB_HOST}" -u root --silent >/dev/null 2>&1; do
+  until MYSQL_PWD="${DB_ROOT_PASSWORD}" mysqladmin ping -h "${DB_HOST}" -u root --silent >/dev/null 2>&1; do
     try=$((try + 1))
     if [ "${try}" -ge 60 ]; then
       log "database did not become ready in time"
@@ -165,6 +165,12 @@ PHP
 
   printf '%s\n' "${POOL_ADMIN_USER}" > "${DATA_ROOT}/admin-user.txt"
   printf '%s\n' "${POOL_ADMIN_PASS}" > "${DATA_ROOT}/admin-password.txt"
+
+  # Legacy Yiimp entrypoints still load these files relative to /var/www.
+  ln -sf "${CONF_ROOT}/serverconfig.php" /var/www/serverconfig.php
+  ln -sf "${CONF_ROOT}/keys.php" /var/www/keys.php
+  ln -sf "${CONF_ROOT}/serverconfig.php" /var/www/yaamp/serverconfig.php
+  ln -sf "${CONF_ROOT}/keys.php" /var/www/yaamp/keys.php
 }
 
 write_stratum_config() {
@@ -240,6 +246,20 @@ seed_pool_if_needed() {
   fi
 }
 
+normalize_seeded_pool_config() {
+  mysql_exec -e "
+    UPDATE coins
+    SET hasgetinfo = 0
+    WHERE algo = 'scrypt' AND symbol IN ('LTC', 'BELLS');
+  "
+
+  mysql_exec -e "
+    UPDATE coins
+    SET auto_exchange = 1
+    WHERE algo = 'scrypt' AND symbol IN ('LTC', 'DOGE', 'BELLS', 'JKC', 'PEPE', 'LKY', 'DINGO', 'TRMP');
+  "
+}
+
 fix_permissions() {
   mkdir -p /var/www/log /var/yiimp2/runtime /var/yiimp2/web/assets
   chown -R www-data:www-data /var/www /var/yiimp2 "${DATA_ROOT}"
@@ -252,6 +272,7 @@ main() {
   import_base_sql_if_needed
   run_migrations
   seed_pool_if_needed
+  normalize_seeded_pool_config
   fix_permissions
   log "bootstrap complete"
 }

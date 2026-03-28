@@ -83,6 +83,7 @@ RUN git clone --branch dev "${YIIMP_REPO}" /src/yiimp \
 
 COPY docker/yiimp/patches/coinbase.cpp /src/yiimp/stratum/coinbase.cpp
 COPY docker/yiimp/patches/db.cpp /src/yiimp/stratum/db.cpp
+COPY docker/yiimp/patches/coind_template.cpp /src/yiimp/stratum/coind_template.cpp
 COPY docker/yiimp/patches/coind_submit.cpp /src/yiimp/stratum/coind_submit.cpp
 COPY docker/yiimp/patches/blocks.php /src/yiimp/web/yaamp/core/backend/blocks.php
 

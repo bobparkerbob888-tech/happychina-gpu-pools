@@ -5,4 +5,6 @@ JKC|10|Junkcoin-Foundation/junkcoin-core|PREBUILT|junkcoind|junkcoin-cli|9772|97
 PEPE|11|pepecoin-project/pepecoin|PREBUILT|pepecoind|pepecoin-cli|29373|29374|pepecoin.conf
 LKY|12|LuckycoinFoundation/Luckycoin|luckycoin-.*-__ARCH__-linux-gnu\.tar\.gz$|luckycoind|luckycoin-cli|9918|9917|luckycoin.conf
 DINGO|13|dingocoin/dingocoin|PREBUILT|dingocoind|dingocoin-cli|34646|33117|dingocoin.conf
+FLOP|60|Flopcoin/Flopcoin|flopcoin-v2.0.0.0-linux.tar.gz|flopcoind|flopcoin-cli|32551|32552|flopcoin.conf
+CRC|334|craftcoin2013/craftcoinV3|craftcoin-3.0.0-linux-x86_64.tar.xz|craftcoind|craftcoin-cli|12124|12123|craftcoin.conf
 TRMP|15|trumpowppc/trumpow|PREBUILT|trumpowd|trumpow-cli|33883|33884|trumpow.conf

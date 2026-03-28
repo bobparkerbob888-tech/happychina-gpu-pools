@@ -3,12 +3,12 @@ id: happychina-yiimp
 category: bitcoin
 name: YIIMP
 icon: https://getumbrel.github.io/umbrel-apps-gallery/public-pool/icon.svg
-version: "2.1.10"
+version: "2.1.11"
 tagline: One-click Yiimp scrypt pool for Umbrel
 description: >-
   Full self-hosted Yiimp stack for Umbrel. Installs MariaDB, the HappyChina
   Yiimp web frontend, six scrypt stratum ports, and public merged-mined wallet
-  daemons for LTC, DOGE, BELLS, JKC, PEPE, LKY, DINGO, and TRMP.
+  daemons for LTC, DOGE, BELLS, JKC, PEPE, LKY, DINGO, FLOP, CRC, and TRMP.
 developer: HappyChina
 website: https://github.com/bobparkerbob888-tech/happychina-umbrel-apps
 dependencies: []
@@ -20,8 +20,7 @@ path: ""
 defaultUsername: "admin"
 defaultPassword: "umbrelpool"
 releaseNotes: >-
-  Fixes bootstrap on upgrades by restoring auto_ready for the curated scrypt
-  coins and defining the missing NestEX keys so PHP 8 no longer crashes the
-  cron path.
+  Restores the packaged auxiliary coin inventory on upgrades, including FLOP
+  and CraftCoin, and keeps the curated scrypt coins normalized on boot.
 submitter: HappyChina
 submission: ""

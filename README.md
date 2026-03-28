@@ -12,7 +12,7 @@ app store and it brings up the full pool stack:
 - six public scrypt stratum ports
 - the custom HappyChina frontend
 - payout-address and payout-secret tools
-- public merged-mined daemons for `LTC`, `DOGE`, `BELLS`, `JKC`, `PEPE`, `LKY`, `DINGO`, and `TRMP`
+- public merged-mined daemons for `LTC`, `DOGE`, `BELLS`, `JKC`, `PEPE`, `LKY`, `DINGO`, `FLOP`, `CRC`, and `TRMP`
 
 Add this community app store in Umbrel:
 
@@ -26,7 +26,7 @@ What to expect:
 
 - this package supports both `x86_64` and `arm64` Umbrel nodes
 - first boot downloads the public wallet binaries and starts chain sync, so the pool is not ready instantly
-- the packaged merged-mined set is the public coin list shown above
+- the packaged merged-mined set is the public coin list shown above, including FLOP and CraftCoin
 
 Default admin login after install:
 
@@ -43,5 +43,5 @@ Password: c=LTC
 
 Published images:
 
-- `ghcr.io/bobparkerbob888-tech/happychina-yiimp-app:2.1.9`
-- `ghcr.io/bobparkerbob888-tech/happychina-yiimp-daemons:2.1.9`
+- `ghcr.io/bobparkerbob888-tech/happychina-yiimp-app:2.1.11`
+- `ghcr.io/bobparkerbob888-tech/happychina-yiimp-daemons:2.1.11`

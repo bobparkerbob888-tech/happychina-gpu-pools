@@ -6,6 +6,7 @@ LOG_ROOT="${DATA_ROOT}/log"
 BACKUP_ROOT="${DATA_ROOT}/backup"
 SQL_ROOT=/opt/happychina-yiimp/sql
 SEED_SQL=/opt/happychina-yiimp/bootstrap/seed.sql
+PACKAGED_COINS_SQL=/opt/happychina-yiimp/bootstrap/packaged-coins.sql
 CONF_ROOT=/etc/yiimp
 STRATUM_ROOT="${CONF_ROOT}/stratum"
 
@@ -277,15 +278,17 @@ normalize_seeded_pool_config() {
 
   mysql_exec -e "
     UPDATE coins
-    SET auto_exchange = 1
-    WHERE algo = 'scrypt' AND symbol IN ('LTC', 'DOGE', 'BELLS', 'JKC', 'PEPE', 'LKY', 'DINGO', 'TRMP');
+    SET enable = 1,
+        auto_exchange = 1,
+        auto_ready = 1,
+        visible = 1,
+        installed = 1
+    WHERE algo = 'scrypt' AND symbol IN ('LTC', 'DOGE', 'BELLS', 'JKC', 'PEPE', 'LKY', 'DINGO', 'TRMP', 'FLOP', 'CRC');
   "
+}
 
-  mysql_exec -e "
-    UPDATE coins
-    SET auto_ready = 1
-    WHERE algo = 'scrypt' AND symbol IN ('LTC', 'DOGE', 'BELLS', 'JKC', 'PEPE', 'LKY', 'DINGO', 'TRMP');
-  "
+ensure_packaged_coins_present() {
+  mysql_exec_force_file "${PACKAGED_COINS_SQL}"
 }
 
 fix_permissions() {
@@ -300,6 +303,7 @@ main() {
   import_base_sql_if_needed
   run_migrations
   seed_pool_if_needed
+  ensure_packaged_coins_present
   normalize_seeded_pool_config
   fix_permissions
   log "bootstrap complete"

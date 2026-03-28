@@ -10,7 +10,7 @@ Install it, wait for first sync, then point miners at it.
 - Yiimp web frontend and backend loops
 - six scrypt stratum ports on `3331` to `3336`
 - public merged-mined daemons for:
-  `LTC`, `DOGE`, `BELLS`, `JKC`, `PEPE`, `LKY`, `DINGO`, `TRMP`
+  `LTC`, `DOGE`, `BELLS`, `JKC`, `PEPE`, `LKY`, `DINGO`, `FLOP`, `CRC`, `TRMP`
 - the custom HappyChina frontend
 - public payout-address page with payout-secret locking
 - admin sweep tools on `Admin > Balances`
@@ -22,7 +22,7 @@ Install it, wait for first sync, then point miners at it.
   the daemon container downloads public Linux binaries and the chains still have
   to sync
 - the packaged merged-mined coins are `LTC`, `DOGE`, `BELLS`, `JKC`, `PEPE`,
-  `LKY`, `DINGO`, and `TRMP`
+  `LKY`, `DINGO`, `FLOP`, `CRC`, and `TRMP`
 
 ## Install
 
@@ -88,5 +88,5 @@ To set or rotate that secret:
 
 ## Images
 
-- `ghcr.io/bobparkerbob888-tech/happychina-yiimp-app:2.1.10`
-- `ghcr.io/bobparkerbob888-tech/happychina-yiimp-daemons:2.1.10`
+- `ghcr.io/bobparkerbob888-tech/happychina-yiimp-app:2.1.11`
+- `ghcr.io/bobparkerbob888-tech/happychina-yiimp-daemons:2.1.11`

@@ -40,6 +40,7 @@ SET FOREIGN_KEY_CHECKS=1;
 
 UPDATE coins SET enable=0, auto_ready=0, visible=0, watch=0;
 DELETE FROM coins WHERE id IN (7, 8, 9, 10, 11, 12, 13, 15);
+DELETE FROM coins WHERE id IN (61, 334);
 
 INSERT INTO mining (id, usdbtc, last_monitor_exchange, last_update_price, last_payout, stratumids, best_algo)
 VALUES (1, 0, 0, 0, 0, '', 'scrypt');
@@ -66,7 +67,16 @@ INSERT INTO coins (
   (12, 'Luckycoin', 'LKY',   '', 'scrypt', '',                                        6, 0.001, 0.001, NULL,  60, 1, 0, 0,     1, 240, 1, 1, 1, 1, UNIX_TIMESTAMP(), '.luckycoin', 'luckycoind', 'umbrel', 'umbrel', 'daemons',  9918,  'POW', '', 1, 1, 0, 0, 0, 0, 1, 0, 1, 1, 'https://luckycoin.org', 'https://github.com/LuckycoinFoundation/Luckycoin', ''),
   (13, 'Dingocoin', 'DINGO', '', 'scrypt', '',                                        7, 0.001, 0.001, NULL,  60, 1, 0, 0,     1, 240, 1, 1, 1, 1, UNIX_TIMESTAMP(), '.dingocoin', 'dingocoind', 'umbrel', 'umbrel', 'daemons', 34646,  'POW', '', 1, 1, 0, 0, 0, 0, 1, 0, 1, 1, 'https://dingocoin.org', 'https://github.com/dingocoin/dingocoin', ''),
   (15, 'TrumPOW',   'TRMP',  '', 'scrypt', '',                                        8, 0.001, 0.001, NULL,  60, 1, 0, 0,     1, 240, 1, 1, 1, 1, UNIX_TIMESTAMP(), '.trumpow',   'trumpowd',   'umbrel', 'umbrel', 'daemons', 33883,  'POW', '', 1, 1, 0, 0, 0, 0, 1, 0, 1, 1, 'https://trumpow.org', 'https://github.com/trumpowppc/trumpow', '');
+INSERT INTO coins (
+  id, name, symbol, symbol2, algo, block_explorer, index_avg, txfee, payout_min, payout_max,
+  block_time, difficulty, block_height, reward, reward_mul, mature_blocks, enable, auto_ready,
+  visible, no_explorer, created, conf_folder, program, rpcuser, rpcpasswd, rpchost, rpcport,
+  rpcencoding, account, hasgetinfo, hassubmitblock, hasmasternodes, usememorypool, usesegwit,
+  txmessage, auxpow, multialgos, installed, watch, link_site, link_github, link_explorer
+) VALUES
+  (61,  'Flopcoin', 'FLOP',  '', 'scrypt', '',                                        9, 0.001, 0.001, NULL,  60, 1, 0, 0,     1, 240, 1, 1, 1, 1, UNIX_TIMESTAMP(), '.flopcoin',  'flopcoind',  'umbrel', 'umbrel', 'daemons', 32551,  'POW', '', 1, 1, 0, 0, 0, 0, 1, 0, 1, 1, 'https://flopcoin.lovable.app', 'https://github.com/Flopcoin/Flopcoin', 'https://explorer.flopcoin.net'),
+  (334, 'CraftCoin', 'CRC',   '', 'scrypt', '',                                       10, 0.001, 0.001, NULL,  60, 1, 0, 0,     1, 240, 1, 1, 1, 1, UNIX_TIMESTAMP(), '.craftcoin', 'craftcoind', 'umbrel', 'umbrel', 'daemons', 12124,  'POW', '', 1, 1, 0, 0, 0, 0, 1, 0, 1, 1, 'https://craftcoin.info', 'https://github.com/craftcoin2013/craftcoinV3', '');
 
 UPDATE coins SET usemweb = 1 WHERE symbol = 'LTC';
 UPDATE coins SET auto_exchange = 1, enable_rpcdebug = 0, sellthreshold = 10000
-WHERE symbol IN ('LTC', 'DOGE', 'BELLS', 'JKC', 'PEPE', 'LKY', 'DINGO', 'TRMP');
+WHERE symbol IN ('LTC', 'DOGE', 'BELLS', 'JKC', 'PEPE', 'LKY', 'DINGO', 'TRMP', 'FLOP', 'CRC');

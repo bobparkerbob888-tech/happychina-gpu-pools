@@ -208,13 +208,7 @@ class AdminController extends CommonController {
 			return array('ok'=>true, 'skipped'=>true, 'message'=>"{$coin->symbol}: nothing to send");
 		}
 
-		$tx = false;
-		if ($isSweep && $remote->type == 'Bitcoin') {
-			$tx = $remote->sendtoaddress($bookmark->address, round($balance, 8), '', '', true);
-		}
-		if(!$tx) {
-			$tx = $remote->sendtoaddress($bookmark->address, $amount);
-		}
+		$tx = $remote->sendtoaddress($bookmark->address, $amount);
 		if(!$tx) {
 			debuglog("unable to send $amount {$coin->symbol} to bookmark {$bookmark->address}");
 			debuglog($remote->error);
@@ -232,9 +226,7 @@ class AdminController extends CommonController {
 			'coin' => $coin,
 			'amount' => $amount,
 			'tx' => $tx,
-			'message' => $isSweep && $remote->type == 'Bitcoin'
-				? "{$coin->symbol}: swept wallet balance to {$bookmark->address} (wallet deducted final fee)"
-				: "{$coin->symbol}: sent {$amount} to {$bookmark->address}",
+			'message' => "{$coin->symbol}: sent {$amount} to {$bookmark->address}",
 		);
 	}
 

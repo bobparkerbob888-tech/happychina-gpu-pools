@@ -73,11 +73,89 @@ mysql_exec() {
 }
 
 mysql_exec_force_file() {
-  MYSQL_PWD="${DB_ROOT_PASSWORD}" mysql \
+  local file="$1"
+  local stderr_file filtered_file
+
+  stderr_file="$(mktemp)"
+  filtered_file="$(mktemp)"
+
+  if ! MYSQL_PWD="${DB_ROOT_PASSWORD}" mysql \
     -h "${DB_HOST}" \
     -u root \
     --force \
-    "${DB_NAME}" < "$1"
+    "${DB_NAME}" < "${file}" >/dev/null 2>"${stderr_file}"; then
+    cat "${stderr_file}" >&2
+    rm -f "${stderr_file}" "${filtered_file}"
+    return 1
+  fi
+
+  filter_mysql_force_stderr "${stderr_file}" > "${filtered_file}"
+  if [ -s "${filtered_file}" ]; then
+    cat "${filtered_file}" >&2
+  fi
+
+  rm -f "${stderr_file}" "${filtered_file}"
+}
+
+filter_mysql_force_stderr() {
+  awk '
+    function flush_block(      benign) {
+      if (block == "") {
+        return
+      }
+
+      benign = 0
+      if (
+        block ~ /ERROR 1005 .*Duplicate key on write or update/ ||
+        block ~ /ERROR 1005 .*errno: 121/ ||
+        block ~ /Warning \\(Code 121\\): .*duplicate key/ ||
+        block ~ /Error \\(Code 1005\\): .*Duplicate key on write or update/ ||
+        block ~ /Error \\(Code 1005\\): .*errno: 121/ ||
+        block ~ /ERROR 1050 .*already exists/ ||
+        block ~ /ERROR 1060 .*Duplicate column name/ ||
+        block ~ /ERROR 1061 .*Duplicate key name/ ||
+        block ~ /ERROR 1091 .*check that (column|key) exists/ ||
+        block ~ /ERROR 1146 .*doesn.t exist/
+      ) {
+        benign = 1
+      }
+
+      if (!benign) {
+        printf "%s", block
+      }
+
+      block = ""
+      in_block = 0
+    }
+
+    /^--------------$/ {
+      flush_block()
+      block = $0 ORS
+      in_block = 1
+      next
+    }
+
+    /^ERROR / {
+      if (!in_block) {
+        block = ""
+        in_block = 1
+      }
+      block = block $0 ORS
+      next
+    }
+
+    {
+      if (in_block) {
+        block = block $0 ORS
+      } else {
+        print
+      }
+    }
+
+    END {
+      flush_block()
+    }
+  ' "$1"
 }
 
 wait_for_db() {

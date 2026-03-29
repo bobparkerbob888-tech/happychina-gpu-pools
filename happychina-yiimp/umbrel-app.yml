@@ -3,7 +3,7 @@ id: happychina-yiimp
 category: bitcoin
 name: YIIMP
 icon: https://getumbrel.github.io/umbrel-apps-gallery/public-pool/icon.svg
-version: "2.1.16"
+version: "2.1.17"
 tagline: One-click Yiimp scrypt pool for Umbrel
 description: >-
   Full self-hosted Yiimp stack for Umbrel. Installs MariaDB, the HappyChina
@@ -20,8 +20,8 @@ path: ""
 defaultUsername: "admin"
 defaultPassword: "umbrelpool"
 releaseNotes: >-
-  Fixes clean-install app-data path fallback, imports legacy CRC/FLOP chain
-  data into the app volume on upgrade, and keeps the tested PEPE host-RPC
-  route when it is reachable from inside the app container.
+  Keeps the tested CRC/FLOP upgrade import and PEPE host-RPC behavior, and
+  cleans up repeated harmless SQL migration noise during bootstrap so upgrades
+  start with quieter logs.
 submitter: HappyChina
 submission: ""

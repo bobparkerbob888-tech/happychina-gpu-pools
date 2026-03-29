@@ -64,6 +64,8 @@ services:
       POOL_ADMIN_PASS: umbrelpool
       POOL_ADMIN_IP: 0.0.0.0/0
       STRATUM_NOTIFY_PASSWORD: blocknotify
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     volumes:
       - ${APP_DATA_DIR}/yiimp:/data/yiimp
     ports:

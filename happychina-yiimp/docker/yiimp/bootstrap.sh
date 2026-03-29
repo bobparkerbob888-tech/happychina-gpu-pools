@@ -285,6 +285,13 @@ normalize_seeded_pool_config() {
         installed = 1
     WHERE algo = 'scrypt' AND symbol IN ('LTC', 'DOGE', 'BELLS', 'JKC', 'PEPE', 'LKY', 'DINGO', 'TRMP', 'FLOP', 'CRC');
   "
+
+  mysql_exec -e "
+    UPDATE coins
+    SET rpchost = 'host.docker.internal',
+        rpcport = 33873
+    WHERE symbol = 'PEPE';
+  "
 }
 
 ensure_packaged_coins_present() {

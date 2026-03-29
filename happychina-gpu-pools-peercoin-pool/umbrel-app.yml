@@ -1,0 +1,22 @@
+manifestVersion: 1.0.0
+id: happychina-gpu-pools-peercoin-pool
+category: bitcoin
+name: Peercoin Pool
+icon: https://getumbrel.github.io/umbrel-apps-gallery/public-pool/icon.svg
+version: "1.0.0"
+tagline: Solo Peercoin mining pool frontend
+description: >-
+  Open the Peercoin Pool frontend running on this Umbrel host.
+developer: HappyChina
+website: https://github.com/bobparkerbob888-tech/happychina-gpu-pools
+dependencies: []
+repo: https://github.com/bobparkerbob888-tech/happychina-gpu-pools
+support: https://github.com/bobparkerbob888-tech/happychina-gpu-pools/issues
+port: 24130
+gallery: []
+path: ""
+defaultPassword: ""
+releaseNotes: >-
+  Initial wrapper app for the local Peercoin Pool frontend.
+submitter: HappyChina
+submission: ""

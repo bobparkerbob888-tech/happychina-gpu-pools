@@ -252,6 +252,91 @@ rpcport=${rpc_port}
 port=${p2p_port}
 blocknotify=${NOTIFY_SCRIPT} ${coinid} %s
 EOF
+
+  case "${symbol}" in
+    CRC)
+      cat >> "${conf_path}" <<'EOF'
+addnode=3.212.41.153:12123
+addnode=3.66.245.44:12123
+addnode=35.95.251.66:12123
+addnode=8.218.231.1:12123
+addnode=52.29.144.46:12123
+EOF
+      ;;
+    PEPE)
+      cat >> "${conf_path}" <<'EOF'
+addnode=82.25.84.176:33874
+addnode=128.140.5.29:33874
+addnode=213.197.35.243:33874
+addnode=217.65.8.75:33874
+addnode=91.148.42.121:33874
+addnode=185.150.190.101:33874
+addnode=77.25.128.95:33874
+addnode=8.218.231.1:33874
+EOF
+      ;;
+    TRMP)
+      cat >> "${conf_path}" <<'EOF'
+addnode=47.236.109.213:33884
+addnode=81.0.247.253:33884
+addnode=3.66.245.44:33884
+addnode=128.199.174.93:33884
+addnode=148.113.191.147:33884
+addnode=44.224.136.92:33884
+addnode=3.212.41.153:33884
+addnode=8.218.231.1:33884
+EOF
+      ;;
+  esac
+}
+
+reset_pepe_runtime_state() {
+  local coin_dir="${RUN_ROOT}/PEPE"
+
+  log "PEPE: removing stale runtime state after genesis mismatch"
+  rm -rf \
+    "${coin_dir}/blocks" \
+    "${coin_dir}/chainstate" \
+    "${coin_dir}/indexes" \
+    "${coin_dir}/database" \
+    "${coin_dir}/backups"
+  rm -f \
+    "${coin_dir}/banlist.dat" \
+    "${coin_dir}/db.log" \
+    "${coin_dir}/debug.log" \
+    "${coin_dir}/fee_estimates.dat" \
+    "${coin_dir}/mempool.dat" \
+    "${coin_dir}/peers.dat"
+}
+
+repair_pepe_datadir_if_needed() {
+  local coin_dir="${RUN_ROOT}/PEPE"
+  local conf_path="${coin_dir}/pepecoin.conf"
+  local daemon_path="${BIN_ROOT}/PEPE/current/pepecoind"
+  local output
+
+  if [ ! -x "${daemon_path}" ] || [ ! -f "${conf_path}" ]; then
+    return
+  fi
+
+  if [ ! -d "${coin_dir}/blocks" ] && [ ! -d "${coin_dir}/chainstate" ]; then
+    return
+  fi
+
+  output="$(
+    timeout 20s "${daemon_path}" \
+      -datadir="${coin_dir}" \
+      -conf="${conf_path}" \
+      -connect=0 \
+      -dnsseed=0 \
+      -listen=0 \
+      -printtoconsole \
+      2>&1 || true
+  )"
+
+  if grep -q "Incorrect or no genesis block found" <<<"${output}"; then
+    reset_pepe_runtime_state
+  fi
 }
 
 render_supervisord() {
@@ -289,6 +374,8 @@ prepare_daemons() {
     install_coin_release "${symbol}" "${repo}" "${asset_pattern}" "${daemon_name}" "${cli_name}"
     write_coin_conf "${symbol}" "${coinid}" "${rpc_port}" "${p2p_port}" "${conf_name}"
   done < "${COINS_FILE}"
+
+  repair_pepe_datadir_if_needed
 }
 
 main() {

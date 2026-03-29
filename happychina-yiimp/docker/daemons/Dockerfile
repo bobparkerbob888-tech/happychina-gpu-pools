@@ -30,9 +30,9 @@ RUN git clone --depth 1 --branch v3.1.1 \
     && install -m 0755 src/junkcoind src/junkcoin-cli /opt/prebuilt/JKC/ \
     && rm -rf /src/junkcoin
 
-# ----- Pepecoin (BDB 4.8 expected, use --with-incompatible-bdb for 5.3) -----
-RUN git clone --depth 1 --branch 'v.021.2.1' \
-        https://github.com/pepecoin-project/pepecoin.git /src/pepecoin \
+# ----- Pepecoin -----
+RUN git clone --depth 1 --branch v1.1.0 \
+        https://github.com/pepecoinppc/pepecoin.git /src/pepecoin \
     && cd /src/pepecoin \
     && chmod +x autogen.sh share/genbuild.sh \
     && ./autogen.sh \

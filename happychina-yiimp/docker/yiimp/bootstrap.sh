@@ -178,6 +178,8 @@ defined('YIIMP_MYSQLDUMP_PATH') or define('YIIMP_MYSQLDUMP_PATH', '${BACKUP_ROOT
 defined('EXCH_AUTO_WITHDRAW') or define('EXCH_AUTO_WITHDRAW', 9999.9999);
 defined('EXCH_NESTEX_KEY') or define('EXCH_NESTEX_KEY', '');
 defined('EXCH_NESTEX_SECRET') or define('EXCH_NESTEX_SECRET', '');
+defined('EXCH_NONKYC_KEY') or define('EXCH_NONKYC_KEY', '');
+defined('EXCH_NONKYC_SECRET') or define('EXCH_NONKYC_SECRET', '');
 PHP
 
   printf '%s\n' "${POOL_ADMIN_USER}" > "${DATA_ROOT}/admin-user.txt"
@@ -286,12 +288,21 @@ normalize_seeded_pool_config() {
     WHERE algo = 'scrypt' AND symbol IN ('LTC', 'DOGE', 'BELLS', 'JKC', 'PEPE', 'LKY', 'DINGO', 'TRMP', 'FLOP', 'CRC');
   "
 
-  mysql_exec -e "
-    UPDATE coins
-    SET rpchost = 'host.docker.internal',
-        rpcport = 33873
-    WHERE symbol = 'PEPE';
-  "
+  if timeout 2 bash -lc "exec 3<>/dev/tcp/host.docker.internal/33873" >/dev/null 2>&1; then
+    mysql_exec -e "
+      UPDATE coins
+      SET rpchost = 'host.docker.internal',
+          rpcport = 33873
+      WHERE symbol = 'PEPE';
+    "
+  else
+    mysql_exec -e "
+      UPDATE coins
+      SET rpchost = 'daemons',
+          rpcport = 33873
+      WHERE symbol = 'PEPE';
+    "
+  fi
 }
 
 ensure_packaged_coins_present() {

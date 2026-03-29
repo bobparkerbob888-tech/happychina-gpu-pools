@@ -1900,8 +1900,8 @@ Password: c=LTC
 const DISPLAY_HOST = ['127.0.0.1', 'localhost'].includes(window.location.hostname)
   ? 'YOUR_UMBREL_IP'
   : (window.location.hostname || 'YOUR_UMBREL_IP');
-const POOL_HTTP_ORIGIN = `${window.location.protocol === 'https:' ? 'https:' : 'http:'}//${DISPLAY_HOST}:8080`;
-const API_BASE = `${POOL_HTTP_ORIGIN}/api`;
+const POOL_HTTP_ORIGIN = window.location.origin;
+const API_BASE = `${window.location.origin}/api`;
 const STRATUM_HOST = DISPLAY_HOST;
 const REFRESH_INTERVAL = 60000; // 60 seconds
 

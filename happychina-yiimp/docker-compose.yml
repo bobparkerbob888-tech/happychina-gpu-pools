@@ -19,7 +19,7 @@ services:
       MYSQL_PASSWORD: yiimp
       MYSQL_ROOT_PASSWORD: yiimp-root
     volumes:
-      - ${APP_DATA_DIR}/mysql:/var/lib/mysql
+      - ${APP_DATA_DIR:-.}/mysql:/var/lib/mysql
     restart: unless-stopped
     healthcheck:
       test:
@@ -32,18 +32,19 @@ services:
       retries: 20
 
   daemons:
-    image: ghcr.io/bobparkerbob888-tech/happychina-yiimp-daemons:2.1.15
+    image: ghcr.io/bobparkerbob888-tech/happychina-yiimp-daemons:2.1.16
     container_name: happychina-yiimp_daemons_1
     platform: linux/amd64
     environment:
       STRATUM_HOST: yiimp
       STRATUM_NOTIFY_PASSWORD: blocknotify
     volumes:
-      - ${APP_DATA_DIR}/daemons:/data/daemons
+      - ${APP_DATA_DIR:-.}/daemons:/data/daemons
+      - /data/coins:/legacy-coins:ro
     restart: unless-stopped
 
   yiimp:
-    image: ghcr.io/bobparkerbob888-tech/happychina-yiimp-app:2.1.15
+    image: ghcr.io/bobparkerbob888-tech/happychina-yiimp-app:2.1.16
     container_name: happychina-yiimp_1
     platform: linux/amd64
     depends_on:
@@ -67,7 +68,7 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
-      - ${APP_DATA_DIR}/yiimp:/data/yiimp
+      - ${APP_DATA_DIR:-.}/yiimp:/data/yiimp
     ports:
       - "3331:3331"
       - "3332:3332"

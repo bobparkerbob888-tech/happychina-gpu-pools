@@ -46,6 +46,20 @@ to publish. During initial chain sync:
 
 That is expected first-boot behavior, not a broken one-click install.
 
+Storage behavior on clean installs:
+
+- App data should live under the Umbrel app directory, not root-level paths.
+- The compose file now falls back to the local app directory if `APP_DATA_DIR`
+  is unset, so data does not spill into `/daemons`, `/mysql`, or `/yiimp`.
+
+Upgrade behavior on older boxes:
+
+- `CRC` and `FLOP` import legacy chain data from `/data/coins` into the app
+  volume on first upgraded start, so older Umbrel boxes do not resync them from
+  scratch in the container.
+- `PEPE` keeps the tested host-native RPC path when that RPC actually answers
+  from inside the app container.
+
 ## Default admin login
 
 - username: `admin`
@@ -97,5 +111,5 @@ To set or rotate that secret:
 
 ## Images
 
-- `ghcr.io/bobparkerbob888-tech/happychina-yiimp-app:2.1.15`
-- `ghcr.io/bobparkerbob888-tech/happychina-yiimp-daemons:2.1.15`
+- `ghcr.io/bobparkerbob888-tech/happychina-yiimp-app:2.1.16`
+- `ghcr.io/bobparkerbob888-tech/happychina-yiimp-daemons:2.1.16`

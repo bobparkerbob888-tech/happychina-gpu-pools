@@ -15,6 +15,8 @@ DB_NAME="${DB_NAME:-yaamp}"
 DB_USER="${DB_USER:-yiimp}"
 DB_PASSWORD="${DB_PASSWORD:-yiimp}"
 DB_ROOT_PASSWORD="${DB_ROOT_PASSWORD:-yiimp-root}"
+COIN_RPC_USER="${COIN_RPC_USER:-umbrel}"
+COIN_RPC_PASSWORD="${COIN_RPC_PASSWORD:-umbrel}"
 
 POOL_SITE_NAME="${POOL_SITE_NAME:-HappyChina Pool}"
 POOL_SITE_HOST="${POOL_SITE_HOST:-umbrel.local}"
@@ -26,6 +28,38 @@ STRATUM_NOTIFY_PASSWORD="${STRATUM_NOTIFY_PASSWORD:-blocknotify}"
 
 log() {
   printf '[yiimp-bootstrap] %s\n' "$*"
+}
+
+host_rpc_available() {
+  local port="$1"
+  curl -fsS \
+    --max-time 3 \
+    --user "${COIN_RPC_USER}:${COIN_RPC_PASSWORD}" \
+    --data-binary '{"jsonrpc":"1.0","id":"yiimp-bootstrap","method":"getblockchaininfo","params":[]}' \
+    -H 'content-type: text/plain;' \
+    "http://host.docker.internal:${port}/" >/dev/null 2>&1
+}
+
+set_coin_rpc_route() {
+  local symbol="$1"
+  local host_port="$2"
+  local daemon_port="${3:-$2}"
+
+  if host_rpc_available "${host_port}"; then
+    mysql_exec -e "
+      UPDATE coins
+      SET rpchost = 'host.docker.internal',
+          rpcport = ${host_port}
+      WHERE symbol = '${symbol}';
+    "
+  else
+    mysql_exec -e "
+      UPDATE coins
+      SET rpchost = 'daemons',
+          rpcport = ${daemon_port}
+      WHERE symbol = '${symbol}';
+    "
+  fi
 }
 
 mysql_exec() {
@@ -288,21 +322,8 @@ normalize_seeded_pool_config() {
     WHERE algo = 'scrypt' AND symbol IN ('LTC', 'DOGE', 'BELLS', 'JKC', 'PEPE', 'LKY', 'DINGO', 'TRMP', 'FLOP', 'CRC');
   "
 
-  if timeout 2 bash -lc "exec 3<>/dev/tcp/host.docker.internal/33873" >/dev/null 2>&1; then
-    mysql_exec -e "
-      UPDATE coins
-      SET rpchost = 'host.docker.internal',
-          rpcport = 33873
-      WHERE symbol = 'PEPE';
-    "
-  else
-    mysql_exec -e "
-      UPDATE coins
-      SET rpchost = 'daemons',
-          rpcport = 33873
-      WHERE symbol = 'PEPE';
-    "
-  fi
+  # PEPE keeps a known-good host-native daemon path on upgraded boxes.
+  set_coin_rpc_route PEPE 33873
 }
 
 ensure_packaged_coins_present() {

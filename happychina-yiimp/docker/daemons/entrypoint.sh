@@ -5,6 +5,7 @@ DATA_ROOT=/data/daemons
 CACHE_ROOT="${DATA_ROOT}/cache"
 BIN_ROOT="${DATA_ROOT}/bin"
 RUN_ROOT="${DATA_ROOT}/run"
+LEGACY_ROOT="${LEGACY_ROOT:-/legacy-coins}"
 SUPERVISOR_CONF=/etc/supervisor/conf.d/daemons.conf
 NOTIFY_SCRIPT=/usr/local/bin/scrypt-blocknotify-all.sh
 COINS_FILE=/opt/happychina-yiimp/daemons/coins.tsv
@@ -290,6 +291,48 @@ EOF
   esac
 }
 
+import_legacy_datadir_if_needed() {
+  local symbol="$1"
+  local legacy_name="$2"
+  local coin_dir="${RUN_ROOT}/${symbol}"
+  local legacy_dir="${LEGACY_ROOT}/${legacy_name}"
+  local marker="${coin_dir}/.legacy-imported"
+
+  if [ ! -d "${legacy_dir}" ]; then
+    return
+  fi
+
+  if [ ! -d "${legacy_dir}/blocks" ] && [ ! -d "${legacy_dir}/chainstate" ]; then
+    return
+  fi
+
+  if [ -f "${marker}" ]; then
+    return
+  fi
+
+  log "${symbol}: importing legacy chain data from ${legacy_dir}"
+  mkdir -p "${coin_dir}"
+  rm -rf \
+    "${coin_dir}/blocks" \
+    "${coin_dir}/chainstate" \
+    "${coin_dir}/indexes" \
+    "${coin_dir}/database" \
+    "${coin_dir}/backups"
+  rm -f \
+    "${coin_dir}/banlist.dat" \
+    "${coin_dir}/db.log" \
+    "${coin_dir}/debug.log" \
+    "${coin_dir}/fee_estimates.dat" \
+    "${coin_dir}/mempool.dat" \
+    "${coin_dir}/peers.dat" \
+    "${coin_dir}"/*.pid \
+    "${coin_dir}"/*.conf
+
+  cp -a "${legacy_dir}/." "${coin_dir}/"
+  rm -f "${coin_dir}"/*.pid "${coin_dir}"/*.conf
+  touch "${marker}"
+}
+
 reset_pepe_runtime_state() {
   local coin_dir="${RUN_ROOT}/PEPE"
 
@@ -372,6 +415,10 @@ prepare_daemons() {
   while IFS='|' read -r symbol coinid repo asset_pattern daemon_name cli_name rpc_port p2p_port conf_name; do
     [ -n "${symbol}" ] || continue
     install_coin_release "${symbol}" "${repo}" "${asset_pattern}" "${daemon_name}" "${cli_name}"
+    case "${symbol}" in
+      CRC) import_legacy_datadir_if_needed "${symbol}" craftcoin ;;
+      FLOP) import_legacy_datadir_if_needed "${symbol}" flopcoin ;;
+    esac
     write_coin_conf "${symbol}" "${coinid}" "${rpc_port}" "${p2p_port}" "${conf_name}"
   done < "${COINS_FILE}"
 

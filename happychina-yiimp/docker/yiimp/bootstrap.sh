@@ -98,64 +98,61 @@ mysql_exec_force_file() {
 }
 
 filter_mysql_force_stderr() {
-  awk '
-    function flush_block(      benign) {
-      if (block == "") {
+  python3 - "$1" <<'PY'
+import pathlib
+import re
+import sys
+
+stderr_path = pathlib.Path(sys.argv[1])
+text = stderr_path.read_text(errors="replace")
+
+benign_patterns = [
+    r"ERROR 1005 .*Duplicate key on write or update",
+    r"ERROR 1005 .*errno: 121",
+    r"Warning \(Code 121\): .*duplicate key",
+    r"Error \(Code 1005\): .*Duplicate key on write or update",
+    r"Error \(Code 1005\): .*errno: 121",
+    r"ERROR 1050 .*already exists",
+    r"ERROR 1060 .*Duplicate column name",
+    r"ERROR 1061 .*Duplicate key name",
+    r"ERROR 1091 .*check that (column|key) exists",
+    r"ERROR 1146 .*doesn.?t exist",
+]
+
+
+def flush_block(block):
+    if not block:
         return
-      }
+    joined = "".join(block)
+    if any(re.search(pattern, joined, re.S) for pattern in benign_patterns):
+        return
+    sys.stdout.write(joined)
 
-      benign = 0
-      if (
-        block ~ /ERROR 1005 .*Duplicate key on write or update/ ||
-        block ~ /ERROR 1005 .*errno: 121/ ||
-        block ~ /Warning \\(Code 121\\): .*duplicate key/ ||
-        block ~ /Error \\(Code 1005\\): .*Duplicate key on write or update/ ||
-        block ~ /Error \\(Code 1005\\): .*errno: 121/ ||
-        block ~ /ERROR 1050 .*already exists/ ||
-        block ~ /ERROR 1060 .*Duplicate column name/ ||
-        block ~ /ERROR 1061 .*Duplicate key name/ ||
-        block ~ /ERROR 1091 .*check that (column|key) exists/ ||
-        block ~ /ERROR 1146 .*doesn.t exist/
-      ) {
-        benign = 1
-      }
 
-      if (!benign) {
-        printf "%s", block
-      }
+block = []
+in_block = False
 
-      block = ""
-      in_block = 0
-    }
+for line in text.splitlines(keepends=True):
+    if line.startswith("--------------"):
+        flush_block(block)
+        block = [line]
+        in_block = True
+        continue
 
-    /^--------------$/ {
-      flush_block()
-      block = $0 ORS
-      in_block = 1
-      next
-    }
+    if line.startswith("ERROR "):
+        if not in_block:
+            block = []
+            in_block = True
+        block.append(line)
+        continue
 
-    /^ERROR / {
-      if (!in_block) {
-        block = ""
-        in_block = 1
-      }
-      block = block $0 ORS
-      next
-    }
+    if in_block:
+        block.append(line)
+    else:
+        sys.stdout.write(line)
 
-    {
-      if (in_block) {
-        block = block $0 ORS
-      } else {
-        print
-      }
-    }
-
-    END {
-      flush_block()
-    }
-  ' "$1"
+flush_block(block)
+PY
 }
 
 wait_for_db() {

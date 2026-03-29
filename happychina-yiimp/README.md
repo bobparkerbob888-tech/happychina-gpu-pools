@@ -36,6 +36,16 @@ Install it, wait for first sync, then point miners at it.
 If the frontend opens but the pool still shows no live data, the daemons are
 still syncing. That is expected on a new install.
 
+On a brand-new install, the web UI can come up before the pool API has anything
+to publish. During initial chain sync:
+
+- `/api/currencies` can return `[]`
+- `/api/blocks` can be empty
+- coin rows in the admin UI can stay unready until each daemon finishes enough
+  sync to flip ready
+
+That is expected first-boot behavior, not a broken one-click install.
+
 ## Default admin login
 
 - username: `admin`

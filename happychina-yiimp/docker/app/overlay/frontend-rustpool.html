@@ -1897,10 +1897,11 @@ Password: c=LTC
 
 <script>
 // ===== CONFIGURATION =====
-const API_BASE = '/api';
 const DISPLAY_HOST = ['127.0.0.1', 'localhost'].includes(window.location.hostname)
   ? 'YOUR_UMBREL_IP'
   : (window.location.hostname || 'YOUR_UMBREL_IP');
+const POOL_HTTP_ORIGIN = `${window.location.protocol === 'https:' ? 'https:' : 'http:'}//${DISPLAY_HOST}:8080`;
+const API_BASE = `${POOL_HTTP_ORIGIN}/api`;
 const STRATUM_HOST = DISPLAY_HOST;
 const REFRESH_INTERVAL = 60000; // 60 seconds
 
@@ -2357,7 +2358,7 @@ function startAutoRefresh() {
 }
 
 // ===== PAYOUT ADDRESSES =====
-const PAYOUT_API = '/payout-api';
+const PAYOUT_API = `${POOL_HTTP_ORIGIN}/payout-api`;
 const FALLBACK_AUX_COINS_CONFIG = {
   DOGE:  { name: 'Dogecoin',   icon: 'doge',  placeholder: 'D...' },
   BELLS: { name: 'Bells',      icon: 'bells', placeholder: 'B...' },

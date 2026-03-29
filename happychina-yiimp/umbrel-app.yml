@@ -3,7 +3,7 @@ id: happychina-yiimp
 category: bitcoin
 name: YIIMP
 icon: https://getumbrel.github.io/umbrel-apps-gallery/public-pool/icon.svg
-version: "2.1.12"
+version: "2.1.13"
 tagline: One-click Yiimp scrypt pool for Umbrel
 description: >-
   Full self-hosted Yiimp stack for Umbrel. Installs MariaDB, the HappyChina
@@ -20,7 +20,7 @@ path: ""
 defaultUsername: "admin"
 defaultPassword: "umbrelpool"
 releaseNotes: >-
-  Restores the packaged auxiliary coin inventory on upgrades, including FLOP
-  and CraftCoin, and keeps the curated scrypt coins normalized on boot.
+  Fixes the clean-install packaged coin bootstrap, restores FLOP and CraftCoin
+  on first boot and upgrades, and keeps the curated scrypt coins normalized on boot.
 submitter: HappyChina
 submission: ""

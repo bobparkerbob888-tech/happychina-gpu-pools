@@ -112,6 +112,7 @@ COPY docker/yiimp/config/001-yiimp2.conf /etc/apache2/sites-available/001-yiimp2
 COPY docker/yiimp/config/ports.conf /etc/apache2/ports.conf
 COPY docker/yiimp/config/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY docker/yiimp/bootstrap/seed.sql /opt/happychina-yiimp/bootstrap/seed.sql
+COPY docker/yiimp/bootstrap/packaged-coins.sql /opt/happychina-yiimp/bootstrap/packaged-coins.sql
 COPY docker/yiimp/bootstrap.sh /usr/local/bin/yiimp-bootstrap.sh
 COPY docker/yiimp/entrypoint.sh /usr/local/bin/yiimp-entrypoint.sh
 

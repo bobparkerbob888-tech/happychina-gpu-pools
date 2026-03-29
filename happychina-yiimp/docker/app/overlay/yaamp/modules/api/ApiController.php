@@ -270,6 +270,61 @@ class ApiController extends CommonController
         echo str_replace("},", "},\n", $json);
     }
 
+    public function actionBlocks()
+    {
+        $client_ip   = arraySafeVal($_SERVER, 'REMOTE_ADDR');
+        $whitelisted = isAdminIP($client_ip);
+        $is_local = preg_match('/^(127\.|10\.|192\.168\.|172\.(1[6-9]|2[0-9]|3[0-1])\.)/', $client_ip);
+        $json = controller()->memcache->get("api_blocks");
+
+        if (!$whitelisted && is_file(YAAMP_LOGS . '/overloaded')) {
+            header('Content-Type: application/json');
+            header('HTTP/1.0 503 Disabled, server overloaded');
+            echo json_encode(array('error' => 'server overloaded'));
+            return;
+        }
+
+        // Never return a blank body to the frontend. LAN clients and cached responses
+        // should continue to work even if the public throttle trips.
+        if (!$whitelisted && !$is_local && !LimitRequest('api-blocks', 60)) {
+            header('Content-Type: application/json');
+            echo empty($json) ? '[]' : $json;
+            return;
+        }
+
+        if (empty($json)) {
+            $items = array();
+            $blocks = getdbolist(
+                'db_blocks',
+                "coin_id IS NOT NULL AND category IN ('generate', 'immature', 'orphan') ORDER BY time DESC LIMIT 200"
+            );
+
+            foreach ($blocks as $block) {
+                $coin = getdbo('db_coins', $block->coin_id);
+                if (!$coin) {
+                    continue;
+                }
+
+                $items[] = array(
+                    'coin' => $coin->symbol,
+                    'symbol' => $coin->symbol,
+                    'height' => (int) $block->height,
+                    'amount' => round((double) $block->amount, 8),
+                    'difficulty' => (double) $block->difficulty,
+                    'time' => (int) $block->time,
+                    'category' => $block->category,
+                    'solo' => (int) $block->solo,
+                );
+            }
+
+            $json = json_encode($items);
+            controller()->memcache->set("api_blocks", $json, 15, MEMCACHE_COMPRESSED);
+        }
+
+        header('Content-Type: application/json');
+        echo $json;
+    }
+
     public function actionWallet()
     {
         if (!LimitRequest('api-wallet', 10)) {

@@ -295,6 +295,11 @@ normalize_seeded_pool_config() {
 }
 
 ensure_packaged_coins_present() {
+  if [ ! -f "${PACKAGED_COINS_SQL}" ]; then
+    log "packaged coin overlay missing at ${PACKAGED_COINS_SQL}, skipping"
+    return 0
+  fi
+
   mysql_exec_force_file "${PACKAGED_COINS_SQL}"
 }
 

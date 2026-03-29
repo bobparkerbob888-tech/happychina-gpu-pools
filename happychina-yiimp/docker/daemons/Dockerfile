@@ -14,9 +14,49 @@ RUN apt-get update \
         libboost-test-dev \
         libdb5.3-dev libdb5.3++-dev \
         libevent-dev libfmt-dev libssl-dev libtool pkg-config python3 bsdmainutils \
+        unzip xz-utils \
     && rm -rf /var/lib/apt/lists/*
 
-RUN mkdir -p /opt/prebuilt/JKC /opt/prebuilt/PEPE /opt/prebuilt/DINGO /opt/prebuilt/TRMP
+RUN mkdir -p \
+      /opt/prebuilt/LTC \
+      /opt/prebuilt/DOGE \
+      /opt/prebuilt/BELLS \
+      /opt/prebuilt/JKC \
+      /opt/prebuilt/PEPE \
+      /opt/prebuilt/LKY \
+      /opt/prebuilt/DINGO \
+      /opt/prebuilt/FLOP \
+      /opt/prebuilt/CRC \
+      /opt/prebuilt/TRMP
+
+RUN bash -lc '\
+  set -euo pipefail; \
+  fetch_release() { \
+    local url="$1" outdir="$2" daemon_name="$3" cli_name="$4"; \
+    local tmp_dir archive_path daemon_path cli_path; \
+    tmp_dir="$(mktemp -d)"; \
+    archive_path="${tmp_dir}/asset"; \
+    curl -fsSL --retry 6 --retry-delay 2 --retry-all-errors -o "${archive_path}" "${url}"; \
+    case "${url}" in \
+      *.tar.gz|*.tgz) tar -xzf "${archive_path}" -C "${tmp_dir}" ;; \
+      *.tar.xz) tar -xJf "${archive_path}" -C "${tmp_dir}" ;; \
+      *.zip) unzip -q "${archive_path}" -d "${tmp_dir}" ;; \
+      *) echo "unsupported archive: ${url}" >&2; exit 1 ;; \
+    esac; \
+    daemon_path="$(find "${tmp_dir}" -type f -name "${daemon_name}" | head -n 1)"; \
+    cli_path="$(find "${tmp_dir}" -type f -name "${cli_name}" | head -n 1)"; \
+    test -n "${daemon_path}"; \
+    test -n "${cli_path}"; \
+    install -m 0755 "${daemon_path}" "${outdir}/${daemon_name}"; \
+    install -m 0755 "${cli_path}" "${outdir}/${cli_name}"; \
+    rm -rf "${tmp_dir}"; \
+  }; \
+  fetch_release "https://github.com/litecoin-project/litecoin/releases/download/v0.21.4/litecoin-0.21.4-x86_64-linux-gnu.tar.gz" /opt/prebuilt/LTC litecoind litecoin-cli; \
+  fetch_release "https://github.com/dogecoin/dogecoin/releases/download/v1.14.9/dogecoin-1.14.9-x86_64-linux-gnu.tar.gz" /opt/prebuilt/DOGE dogecoind dogecoin-cli; \
+  fetch_release "https://github.com/Nintondo/bellscoinV3/releases/download/v3.0.0-rc2/bells-3.0.0-rc2-x86_64-linux-gnu.tar.gz" /opt/prebuilt/BELLS bellsd bells-cli; \
+  fetch_release "https://github.com/LuckycoinFoundation/Luckycoin/releases/download/v5.0.1/luckycoin-5.0.1-x86_64-linux-gnu.tar.gz" /opt/prebuilt/LKY luckycoind luckycoin-cli; \
+  fetch_release "https://github.com/Flopcoin/Flopcoin/releases/download/v2.0.0.0/flopcoin-v2.0.0.0-linux.tar.gz" /opt/prebuilt/FLOP flopcoind flopcoin-cli; \
+  fetch_release "https://github.com/craftcoin2013/craftcoinV3/releases/download/v3.0.3/craftcoin-3.0.0-linux-x86_64.tar.xz" /opt/prebuilt/CRC craftcoind craftcoin-cli'
 
 # ----- Junkcoin (BDB 5.3) -----
 RUN git clone --depth 1 --branch v3.1.1 \

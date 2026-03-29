@@ -1,10 +1,10 @@
-LTC|7|litecoin-project/litecoin|litecoin-.*-__ARCH__-linux-gnu\.tar\.gz$|litecoind|litecoin-cli|9332|9333|litecoin.conf
-DOGE|8|dogecoin/dogecoin|dogecoin-.*-__ARCH__-linux-gnu\.tar\.gz$|dogecoind|dogecoin-cli|22555|22556|dogecoin.conf
-BELLS|9|Nintondo/bellscoinV3|bells-.*-__ARCH__-linux-gnu\.tar\.gz$|bellsd|bells-cli|19918|19919|bells.conf
+LTC|7|litecoin-project/litecoin|PREBUILT|litecoind|litecoin-cli|9332|9333|litecoin.conf
+DOGE|8|dogecoin/dogecoin|PREBUILT|dogecoind|dogecoin-cli|22555|22556|dogecoin.conf
+BELLS|9|Nintondo/bellscoinV3|PREBUILT|bellsd|bells-cli|19918|19919|bells.conf
 JKC|10|Junkcoin-Foundation/junkcoin-core|PREBUILT|junkcoind|junkcoin-cli|9772|9771|junkcoin.conf
 PEPE|11|pepecoinppc/pepecoin|PREBUILT|pepecoind|pepecoin-cli|33873|33874|pepecoin.conf
-LKY|12|LuckycoinFoundation/Luckycoin|luckycoin-.*-__ARCH__-linux-gnu\.tar\.gz$|luckycoind|luckycoin-cli|9918|9917|luckycoin.conf
+LKY|12|LuckycoinFoundation/Luckycoin|PREBUILT|luckycoind|luckycoin-cli|9918|9917|luckycoin.conf
 DINGO|13|dingocoin/dingocoin|PREBUILT|dingocoind|dingocoin-cli|34646|33117|dingocoin.conf
-FLOP|60|Flopcoin/Flopcoin|flopcoin-v2.0.0.0-linux.tar.gz|flopcoind|flopcoin-cli|32551|32552|flopcoin.conf
-CRC|334|craftcoin2013/craftcoinV3|craftcoin-3.0.0-linux-x86_64.tar.xz|craftcoind|craftcoin-cli|12124|12123|craftcoin.conf
+FLOP|60|Flopcoin/Flopcoin|PREBUILT|flopcoind|flopcoin-cli|32551|32552|flopcoin.conf
+CRC|334|craftcoin2013/craftcoinV3|PREBUILT|craftcoind|craftcoin-cli|12124|12123|craftcoin.conf
 TRMP|15|trumpowppc/trumpow|PREBUILT|trumpowd|trumpow-cli|33883|33884|trumpow.conf

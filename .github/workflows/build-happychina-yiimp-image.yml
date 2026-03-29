@@ -31,6 +31,17 @@ jobs:
             dockerfile: ./happychina-yiimp/docker/daemons/Dockerfile
     steps:
       - uses: actions/checkout@v4
+      - name: Read app version
+        id: version
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="$(awk -F'\"' '/^version:/ {print $2; exit}' happychina-yiimp/umbrel-app.yml)"
+          if [ -z "${version}" ]; then
+            echo "failed to read version from happychina-yiimp/umbrel-app.yml" >&2
+            exit 1
+          fi
+          echo "version=${version}" >> "$GITHUB_OUTPUT"
       - uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY }}
@@ -42,7 +53,7 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ matrix.image_name }}
           tags: |
             type=raw,value=latest
-            type=raw,value=2.1.13
+            type=raw,value=${{ steps.version.outputs.version }}
       - name: Build image
         shell: bash
         run: |

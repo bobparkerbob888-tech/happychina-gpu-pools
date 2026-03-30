@@ -461,7 +461,6 @@ function BackendBlockFind2($coinid = NULL)
 		$remote = new WalletRPC($coin);
 
 		$timerpc = microtime(true);
-		$mostrecent = 0;
 		if(empty($coin->lastblock)) $coin->lastblock = '';
 		$list = $remote->listsinceblock($coin->lastblock);
 		$rpcdelay = microtime(true) - $timerpc;
@@ -469,16 +468,22 @@ function BackendBlockFind2($coinid = NULL)
 			screenlog(__FUNCTION__.": {$coin->symbol} listsinceblock took ".round($rpcdelay,3)." sec, ".
 				(is_array($list) ? count($list) : 0). "txs");
 		if(!$list) continue;
+		$advance_lastblock = true;
+		$next_lastblock = arraySafeVal($list, 'lastblock');
 
 		foreach($list['transactions'] as $transaction)
 		{
 			if(!isset($transaction['blockhash'])) continue;
+			// Skip only very recent wallet events. Older events must still import so
+			// the pool can recover block history after outages or stalled cron loops.
 			if($transaction['time'] > time() - 5*60) continue;
-			if($transaction['time'] < time() - 60*60) continue;
 			if($transaction['category'] != 'generate' && $transaction['category'] != 'immature') continue;
 
 			$blockext = $remote->getblock($transaction['blockhash']);
-			if(!$blockext) continue;
+			if(!$blockext) {
+				$advance_lastblock = false;
+				continue;
+			}
 
 			$db_block = getdbosql('db_blocks', "coin_id=:id AND (blockhash=:hash OR height=:height)",
 				array(':id'=>$coin->id, ':hash'=>$transaction['blockhash'], ':height'=>$blockext['height'])
@@ -487,13 +492,6 @@ function BackendBlockFind2($coinid = NULL)
 
 			if ($coin->rpcencoding == 'DCR')
 				debuglog("{$coin->name} generated block {$blockext['height']} detected!");
-
-			if($transaction['time'] > $mostrecent) {
-				$coin = getdbo('db_coins', $coin->id); // refresh coin data
-				$coin->lastblock = $transaction['blockhash'];
-				$coin->save();
-				$mostrecent = $transaction['time'];
-			}
 
 			$db_block = new db_blocks;
 			$db_block->blockhash = $transaction['blockhash'];
@@ -534,11 +532,20 @@ function BackendBlockFind2($coinid = NULL)
 			$db_block->height = $blockext['height'];
 			$db_block->difficulty = $blockext['difficulty'];
 			$db_block->price = $coin->price;
-			if (!$db_block->save())
+			if (!$db_block->save()) {
 				debuglog(__FUNCTION__.": unable to insert block!");
+				$advance_lastblock = false;
+				continue;
+			}
 
 			BackendBlockNew($coin, $db_block);
 		} // tx
+
+		if ($advance_lastblock && !empty($next_lastblock)) {
+			$coin = getdbo('db_coins', $coin->id); // refresh coin data
+			$coin->lastblock = $next_lastblock;
+			$coin->save();
+		}
 	}
 
 	$d1 = microtime(true) - $t1;

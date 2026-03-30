@@ -3,20 +3,20 @@ id: happychina-gpu-pools-ckpool
 category: bitcoin
 name: CKPool
 icon: https://getumbrel.github.io/umbrel-apps-gallery/public-pool/icon.svg
-version: "1.0.0"
+version: "1.0.1"
 tagline: Solo Bitcoin mining pool frontend
 description: >-
   Open the CKPool frontend running on this Umbrel host.
 developer: HappyChina
-website: https://github.com/bobparkerbob888-tech/happychina-gpu-pools
+website: https://github.com/bobparkerbob888-tech/happychina-umbrel-apps
 dependencies: []
-repo: https://github.com/bobparkerbob888-tech/happychina-gpu-pools
-support: https://github.com/bobparkerbob888-tech/happychina-gpu-pools/issues
+repo: https://github.com/bobparkerbob888-tech/happychina-umbrel-apps
+support: https://github.com/bobparkerbob888-tech/happychina-umbrel-apps/issues
 port: 24181
 gallery: []
 path: ""
 defaultPassword: ""
 releaseNotes: >-
-  Initial wrapper app for the local CKPool frontend.
+  Refresh wrapper metadata under the active HappyChina Umbrel Apps repo.
 submitter: HappyChina
 submission: ""

@@ -4,5 +4,8 @@ services:
       APP_HOST: host.docker.internal
       APP_PORT: 8080
     container_name: happychina-yiimp_app_proxy_1
+    depends_on:
+      yiimp:
+        condition: service_started
     extra_hosts:
       - "host.docker.internal:host-gateway"

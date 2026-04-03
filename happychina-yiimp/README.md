@@ -1,6 +1,6 @@
 # HappyChina YIIMP for Umbrel
 
-This app is a full one-click Yiimp pool install for Umbrel.
+This app is a full one-click Yiimp pool install for Umbrel with the HappyChina overlay.
 
 Install it, wait for first sync, then point miners at it.
 

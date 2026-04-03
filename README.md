@@ -4,7 +4,7 @@ This repo ships one Umbrel community app:
 
 - `YIIMP`
 
-`YIIMP` is a one-click scrypt pool for Umbrel.
+`YIIMP` is a one-click full scrypt pool for Umbrel with the HappyChina overlay.
 
 This repository is not just frontend UI or store metadata.
 

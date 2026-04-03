@@ -4,11 +4,12 @@ category: bitcoin
 name: YIIMP
 icon: https://getumbrel.github.io/umbrel-apps-gallery/public-pool/icon.svg
 version: "2.1.19"
-tagline: One-click Yiimp scrypt pool for Umbrel
+tagline: One-click full Yiimp scrypt pool with HappyChina overlay
 description: >-
-  Full self-hosted Yiimp stack for Umbrel. Installs MariaDB, the HappyChina
-  Yiimp web frontend, six scrypt stratum ports, and public merged-mined wallet
-  daemons for LTC, DOGE, BELLS, JKC, PEPE, LKY, DINGO, FLOP, CRC, and TRMP.
+  Full self-hosted Yiimp pool for Umbrel with the HappyChina overlay.
+  Installs MariaDB, the HappyChina Yiimp frontend, six scrypt stratum ports,
+  and public merged-mined wallet daemons for LTC, DOGE, BELLS, JKC, PEPE,
+  LKY, DINGO, FLOP, CRC, and TRMP.
 developer: HappyChina
 website: https://github.com/bobparkerbob888-tech/happychina-umbrel-apps
 dependencies: []

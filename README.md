@@ -1,10 +1,24 @@
 # HappyChina Umbrel Apps
 
-This repo ships one Umbrel community app:
+This repo ships Umbrel community apps for full pool deployments and pool
+frontends:
 
 - `YIIMP`
+- `Peercoin Pool`
+- `CKPool`
 
-`YIIMP` is a one-click full scrypt pool for Umbrel with the HappyChina overlay.
+These are not "GPU pools" in the public-facing sense.
+
+- `YIIMP` is a one-click full scrypt pool for Umbrel with the HappyChina
+  overlay
+- `Peercoin Pool` is a solo SHA-256 ASIC pool with bundled `peercoind`
+- `CKPool` is a solo Bitcoin pool frontend/wrapper for CKPool
+
+Compatibility note:
+
+- some internal Umbrel app ids still contain `gpu-pools` because changing those
+  ids would break updates for existing installs
+- the public repo folder names and GitHub-facing wording have been cleaned up
 
 This repository is not just frontend UI or store metadata.
 
@@ -73,3 +87,8 @@ Relevant backend files in this repo:
 - [happychina-yiimp/docker/yiimp/Dockerfile](./happychina-yiimp/docker/yiimp/Dockerfile)
 - [happychina-yiimp/docker/daemons/Dockerfile](./happychina-yiimp/docker/daemons/Dockerfile)
 - [happychina-yiimp/docker/app/Dockerfile](./happychina-yiimp/docker/app/Dockerfile)
+
+Other app directories:
+
+- [happychina-peercoin-asic-pool](./happychina-peercoin-asic-pool)
+- [happychina-ckpool-solo](./happychina-ckpool-solo)

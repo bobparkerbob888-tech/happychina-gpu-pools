@@ -4,8 +4,28 @@ This repo ships one Umbrel community app:
 
 - `YIIMP`
 
-`YIIMP` is a one-click scrypt pool for Umbrel. Install it from the community
-app store and it brings up the full pool stack:
+`YIIMP` is a one-click scrypt pool for Umbrel.
+
+This repository is not just frontend UI or store metadata.
+
+It contains:
+
+- Umbrel app-store metadata
+- the app `docker-compose.yml`
+- Dockerfiles and entrypoints for the Yiimp app image
+- Dockerfiles and entrypoints for the daemon image
+- bootstrap SQL, config, and source patches used to build the runtime images
+
+What the Umbrel install actually does is:
+
+- Umbrel reads this repo as a community app store repo
+- the app uses the compose file in this repo
+- that compose file pulls the published runtime images built from this repo
+
+So the repo is best described as an Umbrel app-store repo plus the backend build
+context for the runtime images.
+
+Install it from the community app store and it brings up the full pool stack:
 
 - MariaDB
 - Yiimp web + backend loops
@@ -24,8 +44,9 @@ Then install `YIIMP`.
 
 What to expect:
 
-- this package supports both `x86_64` and `arm64` Umbrel nodes
-- first boot downloads the public wallet binaries and starts chain sync, so the pool is not ready instantly
+- target platform is `x86_64`
+- first boot is not instant because the app still has to initialize and the
+  packaged chains still have to sync
 - the packaged merged-mined set is the public coin list shown above, including FLOP and CraftCoin
 
 Default admin login after install:
@@ -43,5 +64,12 @@ Password: c=LTC
 
 Published images:
 
-- `ghcr.io/bobparkerbob888-tech/happychina-yiimp-app:2.1.13`
-- `ghcr.io/bobparkerbob888-tech/happychina-yiimp-daemons:2.1.13`
+- `ghcr.io/bobparkerbob888-tech/happychina-yiimp-app:2.1.19`
+- `ghcr.io/bobparkerbob888-tech/happychina-yiimp-daemons:2.1.19`
+
+Relevant backend files in this repo:
+
+- [happychina-yiimp/docker-compose.yml](./happychina-yiimp/docker-compose.yml)
+- [happychina-yiimp/docker/yiimp/Dockerfile](./happychina-yiimp/docker/yiimp/Dockerfile)
+- [happychina-yiimp/docker/daemons/Dockerfile](./happychina-yiimp/docker/daemons/Dockerfile)
+- [happychina-yiimp/docker/app/Dockerfile](./happychina-yiimp/docker/app/Dockerfile)

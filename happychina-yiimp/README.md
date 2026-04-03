@@ -4,6 +4,18 @@ This app is a full one-click Yiimp pool install for Umbrel.
 
 Install it, wait for first sync, then point miners at it.
 
+Important repo-layout note:
+
+- this repo is an Umbrel app-store repo
+- it is not only frontend UI
+- the runtime images used by the app are built from the Dockerfiles, scripts,
+  SQL, and patches in this repo
+- Umbrel installs the app from this repo's compose file, then pulls the
+  published GHCR images declared there
+
+So if someone says "the GitHub repo is only UI", that is inaccurate. The repo
+contains the build context and install wiring for the full backend stack.
+
 ## What gets installed
 
 - MariaDB database for Yiimp
@@ -90,7 +102,7 @@ Password: c=LTC
 Port map:
 
 - `3332`: fixed `1,000,000`
-- `3333`: vardiff start `1,000,000`
+- `3333`: vardiff start `10,000`
 - `3336`: vardiff start `50,000,000`
 - `3335`: vardiff start `500,000,000`
 - `3334`: fixed `2,000,000,000`

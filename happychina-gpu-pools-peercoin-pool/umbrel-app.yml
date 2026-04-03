@@ -3,11 +3,11 @@ id: happychina-gpu-pools-peercoin-pool
 category: bitcoin
 name: Peercoin Pool
 icon: https://getumbrel.github.io/umbrel-apps-gallery/public-pool/icon.svg
-version: "1.0.2"
+version: "1.1.0"
 tagline: Solo Peercoin SHA-256 ASIC pool
 description: >-
-  Full Peercoin solo pool frontend and stratum service for an existing Peercoin
-  node on this Umbrel host.
+  Full Peercoin solo pool with bundled peercoind, web frontend, stratum, and
+  difficulty tracking. No separate Peercoin RPC install required.
 developer: HappyChina
 website: https://github.com/bobparkerbob888-tech/happychina-umbrel-apps
 dependencies: []
@@ -18,6 +18,7 @@ gallery: []
 path: ""
 defaultPassword: ""
 releaseNotes: >-
-  Replace the dead host-port wrapper with a real bundled web plus server stack.
+  Bundle peercoind and the Peercoin-specific pool patches so the app installs
+  without requiring a preexisting host RPC.
 submitter: HappyChina
 submission: ""

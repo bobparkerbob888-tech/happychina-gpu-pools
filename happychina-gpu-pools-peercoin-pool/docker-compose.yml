@@ -7,33 +7,45 @@ services:
       PROXY_AUTH_WHITELIST: /api/*
     container_name: happychina-gpu-pools-peercoin-pool_app_proxy_1
 
-  web:
-    image: >-
-      ghcr.io/duckaxe/public-pool-ui:3c1289c@sha256:d916a72b2487c935468b894a89450e5ed688525500fcb81961061c3d7a7877e2
-    container_name: happychina-gpu-pools-peercoin-pool_web_1
-    restart: on-failure
-    stop_grace_period: 30s
-    environment:
-      - DOMAIN=$DEVICE_DOMAIN_NAME
+  peercoind:
+    image: peercoin/peercoind:latest
+    container_name: happychina-gpu-pools-peercoin-pool_peercoind_1
+    restart: unless-stopped
+    stop_grace_period: 1m
+    volumes:
+      - ${APP_DATA_DIR}/data/peercoin:/home/peercoin/.peercoin
+    command:
+      - -server
+      - -rpcuser=${APP_PEERCOIN_POOL_RPC_USER}
+      - -rpcpassword=${APP_PEERCOIN_POOL_RPC_PASSWORD}
+      - -rpcallowip=0.0.0.0/0
+      - -rpcbind=0.0.0.0
+      - -rpcport=${APP_PEERCOIN_POOL_RPC_PORT}
+      - -txindex=1
+      - -printtoconsole
 
   server:
     image: >-
       ghcr.io/sethforprivacy/public-pool:9938a05@sha256:96347cbbc2ec6f27ec1b282e8353e41197fad6ca56e011873e69e7c3b6555b14
     container_name: happychina-gpu-pools-peercoin-pool_server_1
-    restart: on-failure
+    restart: unless-stopped
     stop_grace_period: 30s
+    depends_on:
+      - peercoind
     ports:
-      - 2028:2018/tcp
-    extra_hosts:
-      - host.docker.internal:host-gateway
+      - ${APP_PEERCOIN_POOL_STRATUM_PORT}:2018/tcp
     volumes:
-      - ${APP_DATA_DIR:-.}/data/database:/public-pool/DB
+      - ${APP_DATA_DIR}/data/database:/public-pool/DB
+      - ./web/bitcoin-address.validator.js:/public-pool/dist/models/validators/bitcoin-address.validator.js:ro
+      - ./web/MiningJob.js:/public-pool/dist/models/MiningJob.js:ro
+      - ./web/StratumV1Client.js:/public-pool/dist/models/StratumV1Client.js:ro
+      - ./web/stratum-v1-jobs.service.js:/public-pool/dist/services/stratum-v1-jobs.service.js:ro
     environment:
       - NODE_ENV=production
-      - BITCOIN_RPC_URL=http://host.docker.internal
-      - BITCOIN_RPC_USER=umbrel
-      - BITCOIN_RPC_PASSWORD=umbrel
-      - BITCOIN_RPC_PORT=9902
+      - BITCOIN_RPC_URL=http://peercoind
+      - BITCOIN_RPC_USER=${APP_PEERCOIN_POOL_RPC_USER}
+      - BITCOIN_RPC_PASSWORD=${APP_PEERCOIN_POOL_RPC_PASSWORD}
+      - BITCOIN_RPC_PORT=${APP_PEERCOIN_POOL_RPC_PORT}
       - BITCOIN_RPC_TIMEOUT=10000
       - API_PORT=2019
       - STRATUM_PORT=2018
@@ -41,40 +53,79 @@ services:
       - API_SECURE=false
       - ENABLE_SOLO=true
       - ENABLE_PROXY=false
-      - POOL_IDENTIFIER=HappyChina PPC
+      - POOL_IDENTIFIER=${APP_PEERCOIN_POOL_IDENTIFIER}
+
+  web:
+    image: caddy:2-alpine
+    container_name: happychina-gpu-pools-peercoin-pool_web_1
+    restart: unless-stopped
+    depends_on:
+      - server
+    volumes:
+      - ./web/frontend:/var/www/html/frontend:ro
+      - ${APP_DATA_DIR}/data/ppc-diff.json:/var/www/html/ppc-diff.json
+      - ./web/Caddyfile:/etc/caddy/Caddyfile:ro
+
+  update-diff:
+    image: curlimages/curl:latest
+    container_name: happychina-gpu-pools-peercoin-pool_update-diff_1
+    restart: unless-stopped
+    depends_on:
+      - peercoind
+    volumes:
+      - ${APP_DATA_DIR}/data:/app-data
+    environment:
+      - APP_PEERCOIN_POOL_RPC_USER=${APP_PEERCOIN_POOL_RPC_USER}
+      - APP_PEERCOIN_POOL_RPC_PASSWORD=${APP_PEERCOIN_POOL_RPC_PASSWORD}
+      - APP_PEERCOIN_POOL_RPC_PORT=${APP_PEERCOIN_POOL_RPC_PORT}
+    entrypoint: [/bin/sh, -c]
+    command:
+      - |
+        if [ ! -f /app-data/ppc-diff.json ]; then
+          echo '{"difficulty":0}' >/app-data/ppc-diff.json
+        fi
+        while true; do
+          RESULT=$$(curl -sf --user "$${APP_PEERCOIN_POOL_RPC_USER}:$${APP_PEERCOIN_POOL_RPC_PASSWORD}" \
+            --data-binary '{"jsonrpc":"1.0","method":"getblocktemplate","params":[{"rules":["segwit"]}]}' \
+            -H "Content-Type: application/json" \
+            "http://peercoind:$${APP_PEERCOIN_POOL_RPC_PORT}/" 2>/dev/null)
+          if [ -n "$$RESULT" ]; then
+            BITS=$$(echo "$$RESULT" | sed 's/.*"bits":"\([a-f0-9]*\)".*/\1/')
+            if [ -n "$$BITS" ] && [ "$$BITS" != "$$RESULT" ]; then
+              DIFF=$$(echo "$$BITS" | awk '{
+                bits = strtonum("0x" $$1)
+                exp = rshift(bits, 24)
+                mant = and(bits, 0x7fffff)
+                log_max = log(65535) + 208 * log(256)
+                log_target = log(mant) + (exp - 3) * log(256)
+                log_diff = log_max - log_target
+                diff = exp(log_diff)
+                printf "%.2f", diff
+              }')
+              if [ -n "$$DIFF" ]; then
+                echo "{\"difficulty\":$${DIFF}}" >/app-data/ppc-diff.json
+              fi
+            fi
+          fi
+          sleep 60
+        done
 
   proxy:
     image: >-
       nginx:1.25.3@sha256:4c0fdaa8b6341bfdeca5f18f7837462c80cff90527ee35ef185571e1c327beac
     container_name: happychina-gpu-pools-peercoin-pool_proxy_1
+    restart: on-failure
     depends_on:
       - web
       - server
-    restart: on-failure
-    command:
-      - /bin/sh
-      - -c
-      - |
-        cat >/etc/nginx/conf.d/default.conf <<'EOF'
-        server {
-            listen 80;
-
-            location / {
-                proxy_pass http://happychina-gpu-pools-peercoin-pool_web_1:80;
-            }
-
-            location ~* ^/api/ {
-                proxy_pass http://happychina-gpu-pools-peercoin-pool_server_1:2019;
-            }
-        }
-        EOF
-        exec nginx -g 'daemon off;'
+    volumes:
+      - ${APP_DATA_DIR}/data/proxy/nginx.conf:/etc/nginx/conf.d/default.conf:ro
 
   widget-server:
     image: >-
       ghcr.io/getumbrel/umbrel-public-pool-widget:v1.0.0@sha256:b8861a5b79471377f1bfbf6733f11350970b482103d4ef4185f372350ffff6b3
     container_name: happychina-gpu-pools-peercoin-pool_widget-server_1
     user: '1000:1000'
+    restart: on-failure
     environment:
       - PUBLIC_POOL_API_URL=http://happychina-gpu-pools-peercoin-pool_proxy_1/api/pool
-    restart: on-failure

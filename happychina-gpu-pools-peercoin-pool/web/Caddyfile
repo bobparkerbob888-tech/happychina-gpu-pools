@@ -1,0 +1,19 @@
+:80 {
+    root * /var/www/html/frontend
+    file_server
+
+    handle /ppc-diff.json {
+        root * /var/www/html
+        file_server
+    }
+
+    handle /api/* {
+        reverse_proxy server:2019
+    }
+
+    log {
+        output stdout
+        format json
+        level INFO
+    }
+}
